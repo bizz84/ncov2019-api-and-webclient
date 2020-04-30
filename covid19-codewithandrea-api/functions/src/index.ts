@@ -1,13 +1,23 @@
 // Import the Firebase SDK for Google Cloud Functions.
 // Import and initialize the Firebase Admin SDK.
-import * as admin from 'firebase-admin';
-import * as functions from 'firebase-functions';
+import * as admin from 'firebase-admin'
+import * as functions from 'firebase-functions'
 
 admin.initializeApp();
 
-import { saveLatestTotalsToFirestore, runSaveLatestTotalsToFirestore } from './save-to-database';
+// Internal API (for updating the data)
+import { saveLatestTotalsToFirestore, runSaveLatestTotalsToFirestore } from './save-to-database'
 
-exports.saveLatestTotalsToFirestore = functions.https.onRequest((req, res) => saveLatestTotalsToFirestore(res))
+exports.saveLatestTotalsToFirestore = functions.https.onRequest((_, res) => saveLatestTotalsToFirestore(res))
 
 exports.scheduleFirestoreUpdate =
-    functions.pubsub.schedule('0,30 * * * *').onRun((context) => runSaveLatestTotalsToFirestore())
+    functions.pubsub.schedule('0,30 * * * *').onRun((_) => runSaveLatestTotalsToFirestore())
+
+// Public API
+import { cases, casesSuspected, casesConfirmed, deaths, recovered } from './endpoints'
+
+exports.cases = functions.https.onRequest((_, res) => cases(res))
+exports.casesSuspected = functions.https.onRequest((_, res) => casesSuspected(res))
+exports.casesConfirmed = functions.https.onRequest((_, res) => casesConfirmed(res))
+exports.deaths = functions.https.onRequest((_, res) => deaths(res))
+exports.recovered = functions.https.onRequest((_, res) => recovered(res))

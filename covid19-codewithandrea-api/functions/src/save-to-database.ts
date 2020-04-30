@@ -1,5 +1,6 @@
 import * as admin from 'firebase-admin';
 import * as superagent from 'superagent';
+import * as express from 'express'
 
 const endpointUrl = 'https://covid2019-api.herokuapp.com/v2/total'
 
@@ -16,7 +17,7 @@ const endpointUrl = 'https://covid2019-api.herokuapp.com/v2/total'
 }
 */
 
-export async function saveLatestTotalsToFirestore(res: any) {
+export async function saveLatestTotalsToFirestore(res: express.Response) {
     const success = await runSaveLatestTotalsToFirestore()
     res.sendStatus(success ? 200 : 400)
 }
@@ -34,7 +35,7 @@ export async function runSaveLatestTotalsToFirestore(): Promise<boolean> {
 
         console.log(`confirmed: ${data.confirmed}, deaths: ${data.deaths}, recovered: ${data.recovered}, active: ${data.active}`)
 
-        const latestRef = admin.firestore().collection('totals').doc('latest')
+        const latestRef = admin.firestore().collection('latest').doc('totals')
         await latestRef.set({
             data: data,
             date: date,
