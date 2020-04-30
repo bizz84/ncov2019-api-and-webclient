@@ -7,7 +7,7 @@ admin.initializeApp();
 
 import { saveLatestTotalsToFirestore } from './save-to-database';
 
-exports.saveLatestTotalsToFirestore = functions.https.onRequest((req, res) => saveLatestTotalsToFirestore())
+exports.saveLatestTotalsToFirestore = functions.https.onRequest((req, res) => saveLatestTotalsToFirestore(res))
 
-exports.scheduleFirestoreUpdate =
-    functions.pubsub.schedule('0,30 * * * *').onRun((context) => saveLatestTotalsToFirestore())
+// exports.scheduleFirestoreUpdate =
+//     functions.pubsub.schedule('0,30 * * * *').onRun((context) => saveLatestTotalsToFirestore())

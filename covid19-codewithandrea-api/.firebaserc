@@ -1,5 +1,6 @@
 {
   "projects": {
-    "default": "covid19-codewithandrea-api"
+    "default": "covid19-codewithandrea-api",
+    "dev": "covid19-codewithandrea-dev-api"
   }
 }

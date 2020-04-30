@@ -16,13 +16,18 @@ const endpointUrl = 'https://covid2019-api.herokuapp.com/v2/total'
 }
 */
 
-export async function saveLatestTotalsToFirestore() {
+export async function saveLatestTotalsToFirestore(res: any) {
+    const success = await runSaveLatestTotalsToFirestore()
+    res.sendStatus(success ? 200 : 400)
+}
+
+export async function runSaveLatestTotalsToFirestore(): Promise<boolean> {
     try {
         const resp = await superagent.get(endpointUrl)
         const data = resp.body.data
         if (data === undefined) {
             console.log(`could not get data from ${endpointUrl}`)
-            return
+            return false
         }
         const date = getDate(resp.body.ts)
         console.log(`date: ${date}`)
@@ -36,9 +41,11 @@ export async function saveLatestTotalsToFirestore() {
             dateString: date.toISOString()
         })
         console.log(`confirmed: ${data.confirmed}, deaths: ${data.deaths}, recovered: ${data.recovered}, active: ${data.active}`)
+        return true
         //res.send(`confirmed: ${data.confirmed}, deaths: ${data.deaths}, recovered: ${data.recovered}, active: ${data.active}`);
     } catch (e) {
         console.log(e)
+        return false
     }
 }
 
