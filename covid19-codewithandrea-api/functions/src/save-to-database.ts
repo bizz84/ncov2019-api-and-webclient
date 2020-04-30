@@ -43,7 +43,6 @@ export async function runSaveLatestTotalsToFirestore(): Promise<boolean> {
         })
         console.log(`confirmed: ${data.confirmed}, deaths: ${data.deaths}, recovered: ${data.recovered}, active: ${data.active}`)
         return true
-        //res.send(`confirmed: ${data.confirmed}, deaths: ${data.deaths}, recovered: ${data.recovered}, active: ${data.active}`);
     } catch (e) {
         console.log(e)
         return false

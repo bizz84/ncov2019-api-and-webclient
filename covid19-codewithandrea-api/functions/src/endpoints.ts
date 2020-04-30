@@ -70,17 +70,10 @@ export async function recovered(res: any) {
     }])
 }
 
-// async function send(valueKey: String, value: number, dateString: String, res: express.Response) {
-//     res.send([{
-//         valueKey: value,
-//         date: dateString
-//     }])
-// }
-
 async function getTotals() {
 
     const latestDoc = await admin.firestore().collection('latest').doc('totals').get()
-    if (latestDoc == undefined) {
+    if (latestDoc === undefined) {
         return undefined
     }
     return latestDoc.data()
