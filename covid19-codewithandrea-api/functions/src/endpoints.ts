@@ -9,10 +9,10 @@ export async function cases(res: express.Response) {
     }
     const value = totalsData?.data.confirmed
     const date = totalsData?.dateString
-    res.send({
+    res.send([{
         cases: value,
         date: date
-    })
+    }])
 }
 
 export async function casesSuspected(res: express.Response) {
@@ -22,10 +22,10 @@ export async function casesSuspected(res: express.Response) {
         return
     }
     const date = totalsData?.dateString
-    res.send({
+    res.send([{
         data: 0,
         date: date
-    })
+    }])
 }
 
 export async function casesConfirmed(res: express.Response) {
@@ -36,10 +36,10 @@ export async function casesConfirmed(res: express.Response) {
     }
     const value = totalsData?.data.confirmed
     const date = totalsData?.dateString
-    res.send({
+    res.send([{
         data: value,
         date: date
-    })
+    }])
 }
 
 export async function deaths(res: express.Response) {
@@ -50,10 +50,10 @@ export async function deaths(res: express.Response) {
     }
     const value = totalsData?.data.deaths
     const date = totalsData?.dateString
-    res.send({
+    res.send([{
         data: value,
         date: date
-    })
+    }])
 }
 
 export async function recovered(res: any) {
@@ -64,12 +64,18 @@ export async function recovered(res: any) {
     }
     const value = totalsData?.data.recovered
     const date = totalsData?.dateString
-    res.send({
+    res.send([{
         data: value,
         date: date
-    })
+    }])
 }
 
+// async function send(valueKey: String, value: number, dateString: String, res: express.Response) {
+//     res.send([{
+//         valueKey: value,
+//         date: dateString
+//     }])
+// }
 
 async function getTotals() {
 
