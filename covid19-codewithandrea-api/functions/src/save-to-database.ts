@@ -1,5 +1,8 @@
 import * as admin from 'firebase-admin';
+import * as express from 'express';
 import * as superagent from 'superagent';
+import { https } from 'firebase-functions';
+// axios instead?
 
 /* sample data
 {
@@ -14,7 +17,7 @@ import * as superagent from 'superagent';
 }
 */
 
-export async function saveLatestTotalsToFirestore(req, res) {
+export async function saveLatestTotalsToFirestore(req: https.Request, res: express.Response) {
     const endpointUrl = 'https://covid2019-api.herokuapp.com/v2/total'
     const resp = await superagent.get(endpointUrl)
     const data = resp.body.data
@@ -28,9 +31,7 @@ export async function saveLatestTotalsToFirestore(req, res) {
     await latestRef.set({
         data: data,
     })
+    console.log(`confirmed: ${data.confirmed}, deaths: ${data.deaths}, recovered: ${data.recovered}, active: ${data.active}`)
     res.sendStatus(200);
+    //res.send(`confirmed: ${data.confirmed}, deaths: ${data.deaths}, recovered: ${data.recovered}, active: ${data.active}`);
 }
-const resp = await superagent.get('https://covid2019-api.herokuapp.com/v2/total')
-const data = resp.body.data
-console.log(`confirmed: ${data.confirmed}, deaths: ${data.deaths}, recovered: ${data.recovered}, active: ${data.active}`)
-res.send(`confirmed: ${data.confirmed}, deaths: ${data.deaths}, recovered: ${data.recovered}, active: ${data.active}`);
