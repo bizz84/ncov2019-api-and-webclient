@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:ncov2019_codewithandrea_web_client/app/models/environment.dart';
 import 'package:ncov2019_codewithandrea_web_client/app/models/user_authorization_keys.dart';
 import 'package:ncov2019_codewithandrea_web_client/common_widgets/primary_button.dart';
-import 'package:ncov2019_codewithandrea_web_client/common_widgets/segmented_control.dart';
 import 'package:ncov2019_codewithandrea_web_client/services/firestore_database.dart';
 import 'package:provider/provider.dart';
 
-class AuthorizationKeysPage extends StatelessWidget {
-  // TODO: Hook up keys visible with hooks
+class AuthorizationKeysPage extends HookWidget {
   @override
   Widget build(BuildContext context) {
+    final keysVisible = useState(false);
     final database = Provider.of<FirestoreDatabase>(context, listen: false);
     return StreamBuilder<UserAuthorizationKeys>(
       stream: database.userAuthorizationKeys(),
@@ -23,17 +23,19 @@ class AuthorizationKeysPage extends StatelessWidget {
             children: [
               AuthorizationKeyPreview(
                 environment: Environment.sandbox,
+                isKeyVisible: keysVisible.value,
                 authorizationKey: sandboxKey,
               ),
-              SizedBox(height: 16),
+              SizedBox(height: 32),
               AuthorizationKeyPreview(
                 environment: Environment.production,
+                isKeyVisible: keysVisible.value,
                 authorizationKey: productionKey,
               ),
               SizedBox(height: 16),
               ShowHideKeysSelector(
-                keysVisible: true,
-                onVisibleChanged: (keysVisible) {},
+                keysVisible: keysVisible.value,
+                onVisibleChanged: (visible) => keysVisible.value = visible,
               ),
             ],
           ),
@@ -48,10 +50,12 @@ class AuthorizationKeyPreview extends StatelessWidget {
       {Key key,
       @required this.environment,
       @required this.authorizationKey,
+      @required this.isKeyVisible,
       this.onRegenerateKey})
       : super(key: key);
   final Environment environment;
   final String authorizationKey;
+  final bool isKeyVisible;
   final ValueChanged<Environment> onRegenerateKey;
 
   static Map<Environment, String> environmentKeyName = {
@@ -59,17 +63,24 @@ class AuthorizationKeyPreview extends StatelessWidget {
     Environment.production: 'Production key',
   };
 
+  // TODO: Use TextField with obscure argument, disabled input, enabled copy
+  String get keyToShow =>
+      isKeyVisible ? authorizationKey : '********************************';
+
   @override
   Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(environmentKeyName[environment]),
+        Text(environmentKeyName[environment],
+            style: Theme.of(context).textTheme.headline6),
+        SizedBox(height: 8),
         Row(
           mainAxisSize: MainAxisSize.max,
           children: [
             Expanded(
               child: Container(
+                //width: double.infinity,
                 decoration: BoxDecoration(
                   border: Border.all(
                     color: Colors.indigo,
@@ -79,12 +90,13 @@ class AuthorizationKeyPreview extends StatelessWidget {
                     Radius.circular(8.0),
                   ),
                 ),
-                child: Center(
-                  child: SelectableText(
-                    authorizationKey,
-                    maxLines: 3,
-                    style: Theme.of(context).textTheme.bodyText1,
-                  ),
+                padding: const EdgeInsets.all(8),
+                alignment: Alignment.center,
+                child: SelectableText(
+                  keyToShow,
+                  textAlign: TextAlign.start,
+                  maxLines: 3,
+                  style: Theme.of(context).textTheme.headline6,
                 ),
               ),
             ),
@@ -109,14 +121,15 @@ class ShowHideKeysSelector extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SegmentedControl<bool>(
-      header: Text('Keys'),
-      value: keysVisible,
-      children: {
-        false: Text('Hidden'),
-        true: Text('Visible'),
-      },
-      onValueChanged: onVisibleChanged,
+    return Row(
+      children: [
+        Text(
+          'Show keys',
+          style: Theme.of(context).textTheme.headline6,
+        ),
+        SizedBox(width: 8),
+        Switch.adaptive(value: keysVisible, onChanged: onVisibleChanged)
+      ],
     );
   }
 }

@@ -31,10 +31,12 @@ class _DashboardContentsState extends State<DashboardContents> {
             onPageSelected: _selectPage,
           ),
         ),
-        _selectedPage.when(
-          authorizationKeys: () => AuthorizationKeysPage(),
-          accessTokens: () => AccessTokensPage(),
-          endpoint: (endpoint) => EndpointPage(endpoint),
+        Expanded(
+          child: _selectedPage.when(
+            authorizationKeys: () => AuthorizationKeysPage(),
+            accessTokens: () => AccessTokensPage(),
+            endpoint: (endpoint) => EndpointPage(endpoint),
+          ),
         ),
       ],
     );
