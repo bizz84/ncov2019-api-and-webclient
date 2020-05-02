@@ -21,7 +21,9 @@ class DashboardLeftPanel extends StatelessWidget {
   Widget build(BuildContext context) {
     return ListView(
       children: [
+        DashboardListTile(title: 'Setup'),
         DashboardListTile(
+          iconData: Icons.vpn_key,
           title: 'Authorization keys',
           isSelected: selectedPageType == DashboardPageType.authorizationKeys(),
           onPressed: () => onPageSelected(
@@ -29,6 +31,7 @@ class DashboardLeftPanel extends StatelessWidget {
           ),
         ),
         DashboardListTile(
+          iconData: Icons.lock,
           title: 'Access Tokens',
           isSelected: selectedPageType == DashboardPageType.accessTokens(),
           onPressed: () => onPageSelected(
@@ -38,10 +41,10 @@ class DashboardLeftPanel extends StatelessWidget {
         DashboardListTile(title: 'Endpoints'),
         for (var endpoint in Endpoint.values)
           DashboardListTile(
+            iconData: Icons.show_chart,
             title: endpointNames[endpoint],
             isSelected:
                 selectedPageType == DashboardPageType.endpoint(endpoint),
-            isNested: true,
             onPressed: () => onPageSelected(
               DashboardPageType.endpoint(endpoint),
             ),
@@ -54,22 +57,23 @@ class DashboardLeftPanel extends StatelessWidget {
 class DashboardListTile extends StatelessWidget {
   const DashboardListTile({
     Key key,
+    this.iconData,
     @required this.title,
     this.onPressed,
     this.isSelected = false,
-    this.isNested = false,
   }) : super(key: key);
+  final IconData iconData;
   final String title;
   final VoidCallback onPressed;
   final bool isSelected;
-  final bool isNested;
 
   @override
   Widget build(BuildContext context) {
     return Container(
       color: isSelected ? Colors.grey[100] : Colors.white,
       child: ListTile(
-        leading: isNested ? Icon(Icons.chevron_right) : null,
+        //dense: true,
+        leading: iconData != null ? Icon(iconData) : null,
         title: Text(title),
         onTap: onPressed,
       ),

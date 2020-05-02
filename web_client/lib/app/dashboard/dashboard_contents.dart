@@ -24,12 +24,17 @@ class _DashboardContentsState extends State<DashboardContents> {
     return Row(
       mainAxisSize: MainAxisSize.max,
       children: [
-        SizedBox(
+        Container(
           width: 300,
+          color: Colors.white,
           child: DashboardLeftPanel(
             selectedPageType: _selectedPage,
             onPageSelected: _selectPage,
           ),
+        ),
+        Container(
+          width: 0.5,
+          color: Colors.grey[300],
         ),
         Expanded(
           child: _selectedPage.when(
