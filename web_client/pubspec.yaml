@@ -23,6 +23,7 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  freezed_annotation: ^0.7.1
   firebase_auth: 0.15.5+3
   provider: 4.0.5
   cloud_firestore: 0.13.4+2
@@ -37,6 +38,8 @@ dev_dependencies:
     sdk: flutter
   mockito: ^4.1.1
   random_string: ^2.0.0
+  freezed: ^0.10.7
+  build_runner: ^1.7.4
   flutter_driver:
     sdk: flutter 
   test: any

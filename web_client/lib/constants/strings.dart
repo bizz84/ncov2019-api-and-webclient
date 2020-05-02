@@ -41,17 +41,7 @@ class Strings {
   static const String invalidPasswordEmpty = 'Password can\'t be empty';
 
   // Home page
-  static const String homePage = 'Home Page';
-
-  // Jobs page
-  static const String jobs = 'Jobs';
-
-  // Entries page
-  static const String entries = 'Entries';
-
-  // Account page
-  static const String account = 'Account';
-  static const String accountPage = 'Account Page';
+  static const String apiDashboardHome = 'nCoV 2019 API Dashboard';
 
   // Developer menu
   static const String developerMenu = 'Developer menu';

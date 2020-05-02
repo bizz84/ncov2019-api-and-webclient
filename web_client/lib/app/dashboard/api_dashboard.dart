@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:ncov2019_codewithandrea_web_client/app/dashboard/dashboard_contents.dart';
 import 'package:ncov2019_codewithandrea_web_client/common_widgets/show_alert_dialog.dart';
 import 'package:ncov2019_codewithandrea_web_client/common_widgets/show_exception_alert_dialog.dart';
 import 'package:ncov2019_codewithandrea_web_client/constants/keys.dart';
@@ -6,7 +7,7 @@ import 'package:ncov2019_codewithandrea_web_client/constants/strings.dart';
 import 'package:ncov2019_codewithandrea_web_client/services/firebase_auth_service.dart';
 import 'package:provider/provider.dart';
 
-class HomePage extends StatelessWidget {
+class APIDashboard extends StatelessWidget {
   Future<void> _signOut(BuildContext context) async {
     try {
       final FirebaseAuthService auth =
@@ -39,7 +40,8 @@ class HomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(Strings.homePage),
+        title: Text(Strings.apiDashboardHome),
+        elevation: 0,
         actions: <Widget>[
           FlatButton(
             key: Key(Keys.logout),
@@ -54,6 +56,7 @@ class HomePage extends StatelessWidget {
           ),
         ],
       ),
+      body: DashboardContents(),
     );
   }
 }

@@ -1,4 +1,4 @@
-import 'package:ncov2019_codewithandrea_web_client/app/home/home_page.dart';
+import 'package:ncov2019_codewithandrea_web_client/app/dashboard/api_dashboard.dart';
 import 'package:ncov2019_codewithandrea_web_client/app/sign_in/sign_in_page.dart';
 import 'package:flutter/material.dart';
 import 'package:ncov2019_codewithandrea_web_client/services/firebase_auth_service.dart';
@@ -14,7 +14,7 @@ class AuthWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (userSnapshot.connectionState == ConnectionState.active) {
-      return userSnapshot.hasData ? HomePage() : SignInPageBuilder();
+      return userSnapshot.hasData ? APIDashboard() : SignInPageBuilder();
     }
     return Scaffold(
       body: Center(
