@@ -18,12 +18,14 @@ exports.scheduleFirestoreUpdate =
 //////////////////////////
 
 // Authorization keys
-import { generateAuthorizationKeys } from './authorization-keys'
+import { generateAuthorizationKeys, regenerateAuthorizationKey } from './authorization-keys'
 
-exports.generateAuthorizationKeys = functions.auth.user().onCreate(generateAuthorizationKeys);
+// called when a new firebase user is created
+exports.generateAuthorizationKeys = functions.auth.user().onCreate(generateAuthorizationKeys)
+// callable function to regenerate an authorization key (sandbox or production)
+exports.regenerateAuthorizationKey = functions.https.onCall(regenerateAuthorizationKey)
 
 // Endpoints
-
 import { cases, casesSuspected, casesConfirmed, deaths, recovered } from './endpoints'
 
 exports.cases = functions.https.onRequest((_, res) => cases(res))

@@ -1,7 +1,9 @@
+import 'package:cloud_functions/cloud_functions.dart';
 import 'package:ncov2019_codewithandrea_web_client/app/auth_widget.dart';
 import 'package:ncov2019_codewithandrea_web_client/app/auth_widget_builder.dart';
 import 'package:ncov2019_codewithandrea_web_client/routing/router.dart';
 import 'package:flutter/material.dart';
+import 'package:ncov2019_codewithandrea_web_client/services/cloud_functions_service.dart';
 import 'package:provider/provider.dart';
 import 'package:ncov2019_codewithandrea_web_client/services/firestore_database.dart';
 import 'package:ncov2019_codewithandrea_web_client/services/firebase_auth_service.dart';
@@ -27,6 +29,10 @@ class MyApp extends StatelessWidget {
       providers: [
         Provider<FirebaseAuthService>(
           create: authServiceBuilder,
+        ),
+        Provider<CloudFunctionsService>(
+          create: (_) =>
+              CloudFunctionsService(cloudFunctions: CloudFunctions.instance),
         ),
       ],
       child: AuthWidgetBuilder(

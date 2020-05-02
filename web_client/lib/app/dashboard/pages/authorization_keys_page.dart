@@ -3,6 +3,8 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:ncov2019_codewithandrea_web_client/app/models/environment.dart';
 import 'package:ncov2019_codewithandrea_web_client/app/models/user_authorization_keys.dart';
 import 'package:ncov2019_codewithandrea_web_client/common_widgets/primary_button.dart';
+import 'package:ncov2019_codewithandrea_web_client/common_widgets/show_exception_alert_dialog.dart';
+import 'package:ncov2019_codewithandrea_web_client/services/cloud_functions_service.dart';
 import 'package:ncov2019_codewithandrea_web_client/services/firestore_database.dart';
 import 'package:provider/provider.dart';
 
@@ -46,17 +48,29 @@ class AuthorizationKeysPage extends HookWidget {
 }
 
 class AuthorizationKeyPreview extends StatelessWidget {
-  const AuthorizationKeyPreview(
-      {Key key,
-      @required this.environment,
-      @required this.authorizationKey,
-      @required this.isKeyVisible,
-      this.onRegenerateKey})
-      : super(key: key);
+  const AuthorizationKeyPreview({
+    Key key,
+    @required this.environment,
+    @required this.authorizationKey,
+    @required this.isKeyVisible,
+  }) : super(key: key);
   final Environment environment;
   final String authorizationKey;
   final bool isKeyVisible;
-  final ValueChanged<Environment> onRegenerateKey;
+
+  Future<void> _regenerateKey(BuildContext context) async {
+    try {
+      final cloudFunctionsService =
+          Provider.of<CloudFunctionsService>(context, listen: false);
+      cloudFunctionsService.regenerateAuthorizationKey(environment);
+    } catch (e) {
+      showExceptionAlertDialog(
+        context: context,
+        title: 'Could not regenerate the authorization key',
+        exception: e,
+      );
+    }
+  }
 
   static Map<Environment, String> environmentKeyName = {
     Environment.sandbox: 'Sandbox key',
@@ -103,7 +117,7 @@ class AuthorizationKeyPreview extends StatelessWidget {
             SizedBox(width: 16.0),
             PrimaryButton(
               text: 'Regenerate',
-              onPressed: () => onRegenerateKey(environment),
+              onPressed: () => _regenerateKey(context),
             ),
           ],
         )
