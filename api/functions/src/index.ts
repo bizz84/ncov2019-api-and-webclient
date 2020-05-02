@@ -11,7 +11,7 @@ import { saveLatestTotalsToFirestore, runSaveLatestTotalsToFirestore } from './s
 exports.saveLatestTotalsToFirestore = functions.https.onRequest((_, res) => saveLatestTotalsToFirestore(res))
 
 exports.scheduleFirestoreUpdate =
-    functions.pubsub.schedule('* 2,14 * * *').onRun((_) => runSaveLatestTotalsToFirestore())
+    functions.pubsub.schedule('0 2,14 * * *').onRun((_) => runSaveLatestTotalsToFirestore())
 
 // Public API
 import { cases, casesSuspected, casesConfirmed, deaths, recovered } from './endpoints'
