@@ -1,5 +1,5 @@
 import 'package:ncov2019_codewithandrea_web_client/app/sign_in/email_password/email_password_sign_in_model.dart';
-import 'package:ncov2019_codewithandrea_web_client/common_widgets/form_submit_button.dart';
+import 'package:ncov2019_codewithandrea_web_client/common_widgets/primary_button.dart';
 import 'package:ncov2019_codewithandrea_web_client/common_widgets/show_alert_dialog.dart';
 import 'package:ncov2019_codewithandrea_web_client/common_widgets/show_exception_alert_dialog.dart';
 import 'package:ncov2019_codewithandrea_web_client/constants/strings.dart';
@@ -167,7 +167,7 @@ class _EmailPasswordSignInPageState extends State<EmailPasswordSignInPage> {
             _buildPasswordField(),
           ],
           SizedBox(height: 8.0),
-          FormSubmitButton(
+          PrimaryButton(
             key: Key('primary-button'),
             text: model.primaryButtonText,
             loading: model.isLoading,
