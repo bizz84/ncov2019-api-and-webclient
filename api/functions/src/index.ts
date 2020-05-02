@@ -13,7 +13,17 @@ exports.saveLatestTotalsToFirestore = functions.https.onRequest((_, res) => save
 exports.scheduleFirestoreUpdate =
     functions.pubsub.schedule('0 2,14 * * *').onRun((_) => runSaveLatestTotalsToFirestore())
 
+//////////////////////////
 // Public API
+//////////////////////////
+
+// Authorization keys
+import { generateAuthorizationKeys } from './authorization-keys'
+
+exports.generateAuthorizationKeys = functions.auth.user().onCreate(generateAuthorizationKeys);
+
+// Endpoints
+
 import { cases, casesSuspected, casesConfirmed, deaths, recovered } from './endpoints'
 
 exports.cases = functions.https.onRequest((_, res) => cases(res))
