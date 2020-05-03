@@ -7,7 +7,8 @@ class SelectableTextField extends StatelessWidget {
   final String text;
   final bool obscured;
 
-  String get textToShow => obscured ? '********************************' : text;
+  String get textToShow =>
+      obscured && text.isNotEmpty ? '********************************' : text;
 
   @override
   Widget build(BuildContext context) {
@@ -29,6 +30,12 @@ class SelectableTextField extends StatelessWidget {
         textToShow,
         textAlign: TextAlign.start,
         maxLines: 3,
+        toolbarOptions: ToolbarOptions(
+          copy: true,
+          selectAll: true,
+          cut: false,
+          paste: false,
+        ),
         style: Theme.of(context).textTheme.headline6,
       ),
     );
