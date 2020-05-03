@@ -3,21 +3,22 @@ import 'package:ncov2019_codewithandrea_web_client/app/dashboard/common_widgets/
 import 'package:ncov2019_codewithandrea_web_client/app/models/environment.dart';
 import 'package:ncov2019_codewithandrea_web_client/app/models/user_authorization_keys_and_tokens.dart';
 import 'package:ncov2019_codewithandrea_web_client/common_widgets/show_exception_alert_dialog.dart';
-import 'package:ncov2019_codewithandrea_web_client/services/cloud_functions_service.dart';
 import 'package:ncov2019_codewithandrea_web_client/services/firestore_database.dart';
+import 'package:ncov2019_codewithandrea_web_client/services/rest_api/api.dart';
+import 'package:ncov2019_codewithandrea_web_client/services/rest_api/api_service.dart';
 import 'package:provider/provider.dart';
 
 class AccessTokensPage extends StatelessWidget {
   Future<void> _regenerateAccessToken(
       BuildContext context, String authorizationKey) async {
     try {
-      final cloudFunctionsService =
-          Provider.of<CloudFunctionsService>(context, listen: false);
-      cloudFunctionsService.regenerateAccessToken(authorizationKey);
+      final apiService = APIService(API(apiKey: authorizationKey));
+      final accessToken = await apiService.getAccessToken();
+      print('access token: $accessToken');
     } catch (e) {
       showExceptionAlertDialog(
         context: context,
-        title: 'Could not regenerate the authorization key',
+        title: 'Could not generate the access token',
         exception: e,
       );
     }
