@@ -81,7 +81,7 @@ export async function generateAccessToken(req: Request, res: Response) {
         });
         if (responseData.statusCode === 200) {
             res.status(200).send({
-                'access-token': responseData.accessToken
+                'access_token': responseData.accessToken
             })
         } else {
             res.sendStatus(responseData.statusCode)
