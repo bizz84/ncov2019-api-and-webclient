@@ -6,7 +6,7 @@ class CloudFunctionsService {
   CloudFunctionsService({@required this.cloudFunctions});
   final CloudFunctions cloudFunctions;
 
-  Future<dynamic> regenerateAuthorizationKey(Environment environment) async {
+  Future<void> regenerateAuthorizationKey(Environment environment) async {
     Map<Environment, String> environmentName = {
       Environment.sandbox: 'sandbox',
       Environment.production: 'production',
@@ -19,5 +19,21 @@ class CloudFunctionsService {
     print('calling `regenerateAuthorizationKey($environmentArg)`');
     final result = await callable.call(environmentArg);
     return result.data;
+  }
+
+  Future<void> regenerateAccessToken(String authorizationKey) async {
+    // TODO: Use standard HTTP call
+    // Map<Environment, String> environmentName = {
+    //   Environment.sandbox: 'sandbox',
+    //   Environment.production: 'production',
+    // };
+
+    // final HttpsCallable callable = cloudFunctions.getHttpsCallable(
+    //   functionName: 'regenerateAuthorizationKey',
+    // );
+    // final environmentArg = environmentName[environment];
+    // print('calling `regenerateAuthorizationKey($environmentArg)`');
+    // final result = await callable.call(environmentArg);
+    // return result.data;
   }
 }

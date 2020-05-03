@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 
 class SelectableTextField extends StatelessWidget {
-  const SelectableTextField({Key key, this.text, this.obscured})
+  const SelectableTextField(
+      {Key key, @required this.text, this.obscured = false})
       : super(key: key);
   final String text;
   final bool obscured;
@@ -23,7 +24,7 @@ class SelectableTextField extends StatelessWidget {
         ),
       ),
       padding: const EdgeInsets.all(8),
-      alignment: Alignment.center,
+      alignment: Alignment.centerLeft,
       child: SelectableText(
         textToShow,
         textAlign: TextAlign.start,
