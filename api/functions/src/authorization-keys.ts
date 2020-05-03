@@ -5,20 +5,20 @@ import { generateUuid } from './uuid-generator'
 
 export async function generateAuthorizationKeys(userRecord: UserRecord, _: functions.EventContext) {
     try {
-        const sandboxKey = generateUuid()
-        const productionKey = generateUuid()
 
         console.log(`Generating sandbox and production keys for 'users/${userRecord.uid}'`)
         const firestore = admin.firestore()
         await firestore.runTransaction(async (transaction) => {
             // create a sandbox key
+            const sandboxKey = generateUuid()
             const authorizationSandboxKeyDocument = firestore.collection('authorizationKeys').doc(sandboxKey)
             transaction.create(authorizationSandboxKeyDocument, {
                 uid: userRecord.uid,
                 environment: 'sandbox'
             })
             // create a production key
-            const authorizationProductionKeyDocument = firestore.collection('authorizationKeys').doc(sandboxKey)
+            const productionKey = generateUuid()
+            const authorizationProductionKeyDocument = firestore.collection('authorizationKeys').doc(productionKey)
             transaction.create(authorizationProductionKeyDocument, {
                 uid: userRecord.uid,
                 environment: 'production'

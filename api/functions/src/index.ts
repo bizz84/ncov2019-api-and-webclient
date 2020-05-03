@@ -32,8 +32,8 @@ exports.generateAccessToken = functions.https.onRequest(generateAccessToken)
 // Endpoints
 import { cases, casesSuspected, casesConfirmed, deaths, recovered } from './endpoints'
 
-exports.cases = functions.https.onRequest((_, res) => cases(res))
-exports.casesSuspected = functions.https.onRequest((_, res) => casesSuspected(res))
-exports.casesConfirmed = functions.https.onRequest((_, res) => casesConfirmed(res))
-exports.deaths = functions.https.onRequest((_, res) => deaths(res))
-exports.recovered = functions.https.onRequest((_, res) => recovered(res))
+exports.cases = functions.https.onRequest(cases)
+exports.casesSuspected = functions.https.onRequest(casesSuspected)
+exports.casesConfirmed = functions.https.onRequest(casesConfirmed)
+exports.deaths = functions.https.onRequest(deaths)
+exports.recovered = functions.https.onRequest(recovered)
