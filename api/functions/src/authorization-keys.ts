@@ -1,13 +1,12 @@
 import * as admin from 'firebase-admin'
 import * as functions from 'firebase-functions'
-import { UserRecord } from "firebase-functions/lib/providers/auth"
-import * as crypto from 'crypto'
+import { UserRecord } from 'firebase-functions/lib/providers/auth'
+import { generateUuid } from './uuid-generator'
 
 export async function generateAuthorizationKeys(userRecord: UserRecord, _: functions.EventContext) {
     try {
-        // https://stackoverflow.com/a/40191779/436422
-        const sandboxKey = crypto.randomBytes(32).toString('hex')
-        const productionKey = crypto.randomBytes(32).toString('hex')
+        const sandboxKey = generateUuid()
+        const productionKey = generateUuid()
 
         console.log(`Generating sandbox and production keys for 'users/${userRecord.uid}'`)
         const firestore = admin.firestore()
@@ -16,13 +15,13 @@ export async function generateAuthorizationKeys(userRecord: UserRecord, _: funct
             const authorizationSandboxKeyDocument = firestore.collection('authorizationKeys').doc(sandboxKey)
             transaction.create(authorizationSandboxKeyDocument, {
                 uid: userRecord.uid,
-                type: 'sandbox'
+                environment: 'sandbox'
             })
             // create a production key
             const authorizationProductionKeyDocument = firestore.collection('authorizationKeys').doc(sandboxKey)
             transaction.create(authorizationProductionKeyDocument, {
                 uid: userRecord.uid,
-                type: 'production'
+                environment: 'production'
             })
             // create a user document for that key
             const userDocRef = firestore.collection('users').doc(userRecord.uid)
@@ -66,21 +65,16 @@ export async function regenerateAuthorizationKey(environment: any, context: func
             }
             // create the new key
             console.log(`Generating new ${environment} key for: 'users/${uid}'`)
-            const newAuthorizationKey = crypto.randomBytes(32).toString('hex')
+            const newAuthorizationKey = generateUuid()
             const authorizationKeyDocument = firestore.collection('authorizationKeys').doc(newAuthorizationKey)
             transaction.create(authorizationKeyDocument, {
                 uid: uid,
-                type: environment
+                environment: environment
             })
-            if (environment === 'sandbox') {
-                transaction.set(userDocRef, {
-                    sandboxKey: newAuthorizationKey,
-                }, { merge: true })
-            } else {
-                transaction.set(userDocRef, {
-                    productionKey: newAuthorizationKey,
-                }, { merge: true })
-            }
+            const newData = environment === 'sandbox'
+                ? { sandboxKey: newAuthorizationKey }
+                : { productionKey: newAuthorizationKey }
+            transaction.set(userDocRef, newData, { merge: true })
         });
     } catch (error) {
         console.log(`Error generating authorization keys for 'users/${uid}'`, error);

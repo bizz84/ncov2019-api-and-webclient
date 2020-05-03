@@ -25,6 +25,10 @@ exports.generateAuthorizationKeys = functions.auth.user().onCreate(generateAutho
 // callable function to regenerate an authorization key (sandbox or production)
 exports.regenerateAuthorizationKey = functions.https.onCall(regenerateAuthorizationKey)
 
+// Access tokens
+import { generateAccessToken } from './access-tokens'
+exports.generateAccessToken = functions.https.onRequest(generateAccessToken)
+
 // Endpoints
 import { cases, casesSuspected, casesConfirmed, deaths, recovered } from './endpoints'
 
