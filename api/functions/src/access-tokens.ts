@@ -40,9 +40,9 @@ export async function generateAccessToken(req: Request, res: express.Response) {
     }
 }
 
-async function findUserDocumentMatching(authorizationKey: string): Promise<admin.firestore.QueryDocumentSnapshot?> {
+async function findUserDocumentMatching(authorizationKey: string)/*: Promise<admin.firestore.QueryDocumentSnapshot<admin.firestore.DocumentData>> */ {
     const usersCollection = await admin.firestore().collection('users').get()
-    for (var userDocSnapshot of usersCollection.docs) {
+    for (let userDocSnapshot of usersCollection.docs) {
         const userDocData = userDocSnapshot.data()
         if (userDocData.sandboxKey === authorizationKey) {
             return userDocSnapshot
@@ -51,5 +51,5 @@ async function findUserDocumentMatching(authorizationKey: string): Promise<admin
             return userDocSnapshot
         }
     }
-    return null
+    return undefined
 }
