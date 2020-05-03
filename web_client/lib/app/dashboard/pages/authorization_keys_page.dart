@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:ncov2019_codewithandrea_web_client/app/dashboard/selectable_text_field.dart';
 import 'package:ncov2019_codewithandrea_web_client/app/models/environment.dart';
 import 'package:ncov2019_codewithandrea_web_client/app/models/user_authorization_keys.dart';
 import 'package:ncov2019_codewithandrea_web_client/common_widgets/primary_button.dart';
@@ -93,25 +94,9 @@ class AuthorizationKeyPreview extends StatelessWidget {
           mainAxisSize: MainAxisSize.max,
           children: [
             Expanded(
-              child: Container(
-                //width: double.infinity,
-                decoration: BoxDecoration(
-                  border: Border.all(
-                    color: Colors.indigo,
-                    width: 2,
-                  ),
-                  borderRadius: BorderRadius.all(
-                    Radius.circular(8.0),
-                  ),
-                ),
-                padding: const EdgeInsets.all(8),
-                alignment: Alignment.center,
-                child: SelectableText(
-                  keyToShow,
-                  textAlign: TextAlign.start,
-                  maxLines: 3,
-                  style: Theme.of(context).textTheme.headline6,
-                ),
+              child: SelectableTextField(
+                text: authorizationKey,
+                obscured: !isKeyVisible,
               ),
             ),
             SizedBox(width: 16.0),
