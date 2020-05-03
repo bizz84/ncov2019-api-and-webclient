@@ -49,7 +49,8 @@ class KeyOrTokenPreview extends StatelessWidget {
             SizedBox(width: 16.0),
             PrimaryButton(
               text: ctaText,
-              onPressed: () => onCtaPressed(environment),
+              onPressed:
+                  onCtaPressed == null ? null : () => onCtaPressed(environment),
             ),
           ],
         )

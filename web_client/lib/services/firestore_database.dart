@@ -15,6 +15,8 @@ class FirestoreDatabase {
 
   Stream<UserAuthorizationKeysAndTokens> userAuthorizationKeysAndTokens() =>
       _service.documentStream(
-          path: FirestorePath.user(uid),
-          builder: (data, _) => UserAuthorizationKeysAndTokens.fromMap(data));
+        path: FirestorePath.user(uid),
+        builder: (data, uid) =>
+            UserAuthorizationKeysAndTokens.fromMap(data, uid),
+      );
 }

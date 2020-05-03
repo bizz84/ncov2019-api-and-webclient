@@ -6,10 +6,25 @@ class UserAccessToken {
     @required this.accessToken,
     @required this.uid,
     @required this.environment,
+    @required this.expirationDate,
   });
   final String accessToken;
   final String uid;
   final Environment environment;
+  final DateTime expirationDate;
+
+  factory UserAccessToken.fromUserData(
+      Map<String, dynamic> data, String uid, Environment environment) {
+    if (data == null) {
+      return null;
+    }
+    return UserAccessToken(
+      uid: uid,
+      environment: environment,
+      accessToken: data['accessToken'],
+      expirationDate: DateTime.tryParse(data['expirationDate']),
+    );
+  }
 
   factory UserAccessToken.fromMap(
       Map<String, dynamic> data, String documentId) {
@@ -24,6 +39,7 @@ class UserAccessToken {
       uid: data['uid'],
       environment: environment,
       accessToken: documentId,
+      expirationDate: DateTime.tryParse(data['expiration_date']),
     );
   }
 

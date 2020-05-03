@@ -1,26 +1,31 @@
 import 'package:flutter/foundation.dart';
+import 'package:ncov2019_codewithandrea_web_client/app/models/environment.dart';
+import 'package:ncov2019_codewithandrea_web_client/app/models/user_access_token.dart';
 
 class UserAuthorizationKeysAndTokens {
   UserAuthorizationKeysAndTokens({
     @required this.sandboxKey,
     @required this.productionKey,
-    @required this.sandboxAccessToken,
-    @required this.productionAccessToken,
+    this.sandboxAccessToken,
+    this.productionAccessToken,
   });
   final String sandboxKey;
   final String productionKey;
-  final String sandboxAccessToken;
-  final String productionAccessToken;
+  final UserAccessToken sandboxAccessToken;
+  final UserAccessToken productionAccessToken;
 
-  factory UserAuthorizationKeysAndTokens.fromMap(Map<String, dynamic> data) {
+  factory UserAuthorizationKeysAndTokens.fromMap(
+      Map<String, dynamic> data, String uid) {
     if (data == null) {
       return null;
     }
     return UserAuthorizationKeysAndTokens(
       sandboxKey: data['sandboxKey'],
       productionKey: data['productionKey'],
-      sandboxAccessToken: data['sandboxAccessToken'],
-      productionAccessToken: data['productionAccessToken'],
+      sandboxAccessToken: UserAccessToken.fromUserData(
+          data['sandboxAccessToken'], uid, Environment.sandbox),
+      productionAccessToken: UserAccessToken.fromUserData(
+          data['productionAccessToken'], uid, Environment.production),
     );
   }
 

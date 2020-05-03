@@ -12,6 +12,7 @@ class AccessTokensPage extends StatelessWidget {
   Future<void> _regenerateAccessToken(
       BuildContext context, String authorizationKey) async {
     try {
+      assert(authorizationKey != null);
       final apiService = APIService(API(apiKey: authorizationKey));
       final accessToken = await apiService.getAccessToken();
       print('access token: $accessToken');
@@ -24,7 +25,6 @@ class AccessTokensPage extends StatelessWidget {
     }
   }
 
-  // TODO: Show access tokens
   @override
   Widget build(BuildContext context) {
     final database = Provider.of<FirestoreDatabase>(context, listen: false);
@@ -32,12 +32,10 @@ class AccessTokensPage extends StatelessWidget {
         stream: database.userAuthorizationKeysAndTokens(),
         builder: (_, snapshot) {
           final keysAndTokens = snapshot.data;
-          final sandboxAccessToken = keysAndTokens?.sandboxAccessToken ?? '';
-          final productionAccessToken =
-              keysAndTokens?.productionAccessToken ?? '';
-          final sandboxKey = keysAndTokens?.sandboxKey ?? '';
-          final productionKey = keysAndTokens?.productionKey ?? '';
-
+          final sandboxAccessToken = keysAndTokens?.sandboxAccessToken;
+          final productionAccessToken = keysAndTokens?.productionAccessToken;
+          final sandboxKey = keysAndTokens?.sandboxKey;
+          final productionKey = keysAndTokens?.productionKey;
           return Padding(
             padding: const EdgeInsets.all(16.0),
             child: Column(
@@ -45,22 +43,26 @@ class AccessTokensPage extends StatelessWidget {
               children: [
                 KeyOrTokenPreview(
                   environment: Environment.sandbox,
-                  value: sandboxAccessToken,
+                  value: sandboxAccessToken?.accessToken ?? '',
                   title: 'access token',
                   ctaText: 'Reload',
                   isTextVisible: true,
-                  onCtaPressed: (environment) =>
-                      _regenerateAccessToken(context, sandboxKey),
+                  onCtaPressed: sandboxKey == null
+                      ? null
+                      : (environment) =>
+                          _regenerateAccessToken(context, sandboxKey),
                 ),
                 SizedBox(height: 32),
                 KeyOrTokenPreview(
                   environment: Environment.production,
-                  value: productionAccessToken,
+                  value: productionAccessToken?.accessToken ?? '',
                   title: 'access token',
                   ctaText: 'Reload',
                   isTextVisible: true,
-                  onCtaPressed: (environment) =>
-                      _regenerateAccessToken(context, productionKey),
+                  onCtaPressed: productionKey == null
+                      ? null
+                      : (environment) =>
+                          _regenerateAccessToken(context, productionKey),
                 ),
               ],
             ),
