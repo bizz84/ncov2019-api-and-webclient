@@ -55,33 +55,32 @@ export async function generateAccessToken(req: Request, res: Response) {
             // check if there is already an access token for that user
             const data = userDocSnapshot.data()!
             const accessTokenKey = `${environment}AccessToken`
-            const accessToken = data[accessTokenKey]
-            if (accessToken === undefined) {
-                // generate a new access token
-                const newAccessToken = generateUuid()
-                // write it to `users/$uid`
-                const newData = environment === 'sandbox'
-                    ? { sandboxAccessToken: newAccessToken }
-                    : { productionAccessToken: newAccessToken }
-                transaction.set(userDocRef, newData, { merge: true })
-                // write it to `accessTokens/$accessToken`
-                const accessTokenDocRef = firestore.collection('accessTokens').doc(newAccessToken)
-                transaction.set(accessTokenDocRef, {
-                    uid: uid,
-                    environment: environment
-                    // TODO: write expiry date
-                }, { merge: true })
-                return { statusCode: 200, accessToken: newAccessToken }
+            const accessTokenData = data[accessTokenKey]
+            if (accessTokenData === undefined) {
+                // generate a new access token and send response
+                const newAccessTokenData = generateNewToken(transaction, environment, userDocRef, uid)
+                return { statusCode: 200, accessTokenData: newAccessTokenData }
 
             } else {
-                // return the existing access token
-                // TODO: check if expired
-                return { statusCode: 200, accessToken: accessToken }
+                const currentTime = new Date().valueOf()
+                if (currentTime > accessTokenData.expirationTime) {
+                    // delete old token
+                    const accessTokenDocRef = firestore.collection('accessTokens').doc(accessTokenData.accessToken)
+                    transaction.delete(accessTokenDocRef)
+                    // generate a new access token and send response
+                    const newAccessTokenData = generateNewToken(transaction, environment, userDocRef, uid)
+                    return { statusCode: 200, accessTokenData: newAccessTokenData }
+                }
+                else {
+                    return { statusCode: 200, accessTokenData: accessTokenData }
+                }
             }
         });
         if (responseData.statusCode === 200) {
             res.status(200).send({
-                'access_token': responseData.accessToken
+                access_token: responseData.accessTokenData.accessToken,
+                expiration_time: responseData.accessTokenData.expirationTime,
+                expiration_date: responseData.accessTokenData.expirationDate
             })
         } else {
             res.sendStatus(responseData.statusCode)
@@ -94,3 +93,30 @@ export async function generateAccessToken(req: Request, res: Response) {
     }
 }
 
+function generateNewToken(transaction: admin.firestore.Transaction, environment: string, userDocRef: admin.firestore.DocumentReference, uid: string) {
+    const firestore = admin.firestore()
+    const newAccessToken = generateUuid()
+    const tokenCreationDate = new Date()
+    const tokenCreationTimeMs = tokenCreationDate.valueOf()
+    const tokenExpirationTimeMs = tokenCreationTimeMs + 3600 * 1000
+    const tokenExpirationDate = new Date(tokenExpirationTimeMs)
+    console.log(`token creation date: ${tokenCreationDate}, token expiration date: ${tokenExpirationDate}`)
+    // write it to `users/$uid`
+    const accessTokenData = {
+        accessToken: newAccessToken,
+        expirationTime: tokenExpirationTimeMs,
+        expirationDate: tokenExpirationDate.toISOString()
+    }
+    const newData = environment === 'sandbox'
+        ? { sandboxAccessToken: accessTokenData }
+        : { productionAccessToken: accessTokenData }
+    transaction.set(userDocRef, newData, { merge: true })
+    // write it to `accessTokens/$accessToken`
+    const accessTokenDocRef = firestore.collection('accessTokens').doc(newAccessToken)
+    transaction.set(accessTokenDocRef, {
+        uid: uid,
+        environment: environment,
+        ...accessTokenData
+    }, { merge: true })
+    return accessTokenData
+}
