@@ -14,20 +14,15 @@ class SegmentedControl<T> extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.center,
       children: <Widget>[
-        Padding(
-          padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
-          child: header,
-        ),
-        SizedBox(
-          width: double.infinity,
-          child: CupertinoSegmentedControl<T>(
-            children: children,
-            groupValue: value,
-            onValueChanged: onValueChanged,
-          ),
+        header,
+        SizedBox(height: 8.0),
+        CupertinoSegmentedControl<T>(
+          children: children,
+          groupValue: value,
+          onValueChanged: onValueChanged,
         ),
       ],
     );
