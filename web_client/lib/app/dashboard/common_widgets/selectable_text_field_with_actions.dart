@@ -9,11 +9,13 @@ class SelectableTextFieldWithActions extends StatelessWidget {
     @required this.title,
     @required this.value,
     this.isTextVisible = true,
+    this.showCopyAction = true,
     this.customActionBuilder,
   }) : super(key: key);
   final String title;
   final String value;
   final bool isTextVisible;
+  final bool showCopyAction;
   final WidgetBuilder customActionBuilder;
 
   String get keyToShow =>
@@ -42,10 +44,11 @@ class SelectableTextFieldWithActions extends StatelessWidget {
           mainAxisSize: MainAxisSize.max,
           children: [
             Spacer(),
-            PrimaryButton(
-              text: 'Copy',
-              onPressed: () => _copyToClipboard(context, value),
-            ),
+            if (showCopyAction)
+              PrimaryButton(
+                text: 'Copy',
+                onPressed: () => _copyToClipboard(context, value),
+              ),
             if (customActionBuilder != null) ...[
               SizedBox(width: 16.0),
               customActionBuilder(context),

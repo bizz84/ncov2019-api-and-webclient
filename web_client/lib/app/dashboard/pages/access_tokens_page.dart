@@ -13,8 +13,7 @@ class AccessTokensPage extends StatelessWidget {
       BuildContext context, String authorizationKey) async {
     try {
       assert(authorizationKey != null);
-      final apiService = APIService(authorizationKey);
-      final accessToken = await apiService.getAccessToken();
+      final accessToken = await APIService().getAccessToken(authorizationKey);
       print('access token: $accessToken');
     } catch (e) {
       showExceptionAlertDialog(

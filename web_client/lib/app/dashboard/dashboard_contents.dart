@@ -4,6 +4,7 @@ import 'package:ncov2019_codewithandrea_web_client/app/dashboard/pages/access_to
 import 'package:ncov2019_codewithandrea_web_client/app/dashboard/pages/authorization_keys_page.dart';
 import 'package:ncov2019_codewithandrea_web_client/app/dashboard/pages/endpoint_page.dart';
 import 'package:ncov2019_codewithandrea_web_client/app/models/dashboard_page_type.dart';
+import 'package:ncov2019_codewithandrea_web_client/app/models/endpoint.dart';
 
 class DashboardContents extends StatefulWidget {
   @override
@@ -12,6 +13,14 @@ class DashboardContents extends StatefulWidget {
 
 class _DashboardContentsState extends State<DashboardContents> {
   DashboardPageType _selectedPage = DashboardPageType.authorizationKeys();
+
+  final _keys = {
+    Endpoint.cases: UniqueKey(),
+    Endpoint.casesSuspected: UniqueKey(),
+    Endpoint.casesConfirmed: UniqueKey(),
+    Endpoint.deaths: UniqueKey(),
+    Endpoint.recovered: UniqueKey(),
+  };
 
   void _selectPage(DashboardPageType page) {
     if (_selectedPage != page) {
@@ -40,7 +49,8 @@ class _DashboardContentsState extends State<DashboardContents> {
           child: _selectedPage.when(
             authorizationKeys: () => AuthorizationKeysPage(),
             accessTokens: () => AccessTokensPage(),
-            endpoint: (endpoint) => EndpointPage(endpoint),
+            endpoint: (endpoint) =>
+                EndpointPage(endpoint, key: _keys[endpoint]),
           ),
         ),
       ],

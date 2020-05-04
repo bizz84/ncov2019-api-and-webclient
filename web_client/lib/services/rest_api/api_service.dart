@@ -1,13 +1,11 @@
 import 'dart:convert';
 
 import 'package:http/http.dart' as http;
+import 'package:ncov2019_codewithandrea_web_client/app/models/endpoint.dart';
 import 'package:ncov2019_codewithandrea_web_client/services/rest_api/api.dart';
 
 class APIService {
-  APIService(this.apiKey);
-  final String apiKey;
-
-  Future<String> getAccessToken() async {
+  Future<String> getAccessToken(String apiKey) async {
     final response = await http.post(
       API.tokenUri().toString(),
       headers: {'Authorization': 'Bearer $apiKey'},
@@ -22,5 +20,13 @@ class APIService {
     print(
         'Request ${API.tokenUri()} failed\nResponse: ${response.statusCode} ${response.reasonPhrase}');
     throw response;
+  }
+
+  Future<http.Response> getEndpointResponse(
+      Endpoint endpoint, String accessToken) async {
+    return await http.get(
+      API.endpointUri(endpoint).toString(),
+      headers: {'Authorization': 'Bearer $accessToken'},
+    );
   }
 }

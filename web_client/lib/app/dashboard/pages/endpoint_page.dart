@@ -4,27 +4,43 @@ import 'package:ncov2019_codewithandrea_web_client/app/dashboard/common_widgets/
 import 'package:ncov2019_codewithandrea_web_client/app/models/endpoint.dart';
 import 'package:ncov2019_codewithandrea_web_client/app/models/environment.dart';
 import 'package:ncov2019_codewithandrea_web_client/app/models/user_authorization_keys_and_tokens.dart';
+import 'package:ncov2019_codewithandrea_web_client/common_widgets/primary_button.dart';
 import 'package:ncov2019_codewithandrea_web_client/common_widgets/segmented_control.dart';
 import 'package:ncov2019_codewithandrea_web_client/services/firestore_database.dart';
 import 'package:ncov2019_codewithandrea_web_client/services/rest_api/api.dart';
+import 'package:ncov2019_codewithandrea_web_client/services/rest_api/api_service.dart';
 import 'package:provider/provider.dart';
 
-class EndpointPage extends HookWidget {
+class EndpointPage extends StatefulWidget {
   const EndpointPage(this.endpoint, {Key key}) : super(key: key);
   final Endpoint endpoint;
 
   @override
+  _EndpointPageState createState() => _EndpointPageState();
+}
+
+class _EndpointPageState extends State<EndpointPage> {
+  Environment _environment = Environment.sandbox;
+  String _responseText = '';
+
+  Future<void> _sendRequest(BuildContext context, {String accessToken}) async {
+    final response =
+        await APIService().getEndpointResponse(widget.endpoint, accessToken);
+    setState(() => _responseText = response.body);
+    print(response.body);
+  }
+
+  @override
   Widget build(BuildContext context) {
-    final environment = useState(Environment.sandbox);
-    final url =
-        Uri(scheme: 'https', host: API.host, path: endpoint.name).toString();
+    final url = Uri(scheme: 'https', host: API.host, path: widget.endpoint.name)
+        .toString();
     return Padding(
       padding: const EdgeInsets.all(16.0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            endpoint.name,
+            widget.endpoint.name,
             style: Theme.of(context).textTheme.headline3,
           ),
           SizedBox(height: 24),
@@ -33,15 +49,25 @@ class EndpointPage extends HookWidget {
             value: url,
           ),
           EnvironmentSegmentedControl(
-            environment: environment.value,
-            onValueChanged: (env) => environment.value = env,
+            environment: _environment,
+            onValueChanged: (env) => setState(() => _environment = env),
           ),
           SizedBox(height: 24),
           CurlCommandWithAccessToken(
-            environment: environment.value,
+            environment: _environment,
             curlCommandBuilder: (accessToken) =>
                 "curl -X GET --header 'Authorization: Bearer $accessToken' '$url'",
+            onSend: (accessToken) =>
+                _sendRequest(context, accessToken: accessToken),
           ),
+          if (_responseText.isNotEmpty) ...[
+            SizedBox(height: 24),
+            SelectableTextFieldWithActions(
+              title: 'Response',
+              value: _responseText,
+              showCopyAction: false,
+            ),
+          ]
         ],
       ),
     );
@@ -88,9 +114,10 @@ class EnvironmentSegmentedControlText extends StatelessWidget {
 
 class CurlCommandWithAccessToken extends StatelessWidget {
   const CurlCommandWithAccessToken(
-      {Key key, this.curlCommandBuilder, this.environment})
+      {Key key, this.curlCommandBuilder, this.environment, this.onSend})
       : super(key: key);
   final String Function(String accessToken) curlCommandBuilder;
+  final ValueChanged<String> onSend;
   final Environment environment;
 
   @override
@@ -107,6 +134,10 @@ class CurlCommandWithAccessToken extends StatelessWidget {
           return SelectableTextFieldWithActions(
             title: 'curl command',
             value: curlCommandBuilder(accessToken),
+            customActionBuilder: (context) => PrimaryButton(
+              text: 'Send',
+              onPressed: () => onSend(accessToken),
+            ),
           );
         });
   }
