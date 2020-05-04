@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:ncov2019_codewithandrea_web_client/app/dashboard/common_widgets/selectable_text_field.dart';
 import 'package:ncov2019_codewithandrea_web_client/app/dashboard/common_widgets/selectable_text_field_with_actions.dart';
 import 'package:ncov2019_codewithandrea_web_client/app/models/endpoint.dart';
 import 'package:ncov2019_codewithandrea_web_client/app/models/user_authorization_keys_and_tokens.dart';

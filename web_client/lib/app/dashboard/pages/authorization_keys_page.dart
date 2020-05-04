@@ -38,6 +38,11 @@ class AuthorizationKeysPage extends HookWidget {
           padding: const EdgeInsets.all(16.0),
           child: Column(
             children: [
+              ShowHideKeysSelector(
+                keysVisible: keysVisible.value,
+                onVisibleChanged: (visible) => keysVisible.value = visible,
+              ),
+              SizedBox(height: 16),
               KeyOrTokenPreview(
                 environment: Environment.sandbox,
                 isTextVisible: keysVisible.value,
@@ -56,11 +61,6 @@ class AuthorizationKeysPage extends HookWidget {
                 ctaText: 'Regenerate',
                 onCtaPressed: (environment) =>
                     _regenerateAuthorizationKey(context, environment),
-              ),
-              SizedBox(height: 16),
-              ShowHideKeysSelector(
-                keysVisible: keysVisible.value,
-                onVisibleChanged: (visible) => keysVisible.value = visible,
               ),
             ],
           ),
