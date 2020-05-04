@@ -110,10 +110,7 @@ async function readAndValidateAccessToken(req: Request) {
     if (accessToken === undefined) {
         return false
     }
-    if (!isAccessTokenValid(accessToken)) {
-        return false
-    }
-    return true
+    return await isAccessTokenValid(accessToken)
 }
 
 async function getAccessToken(req: Request) {
@@ -148,8 +145,7 @@ async function isAccessTokenValid(accessToken: string) {
     const accessTokenData = accessTokenSnapshot.data()!
     const currentDate = new Date()
     const currentTimeMs = currentDate.valueOf()
-    if (currentTimeMs > accessTokenData.expirationTime) {
-        return false
-    }
-    return true
+    const isValid = currentTimeMs <= accessTokenData.expirationTime
+    console.log(`found 'accessTokens/${accessToken}' document, valid: ${isValid}`)
+    return isValid
 }
