@@ -1,32 +1,18 @@
-import 'package:flutter/foundation.dart';
-
-enum Endpoint {
-  cases,
-  casesSuspected,
-  casesConfirmed,
-  deaths,
-  recovered,
-}
+import 'package:ncov2019_codewithandrea_web_client/app/models/endpoint.dart';
 
 class API {
-  API({@required this.apiKey});
-  final String apiKey;
-
-  static final String host =
+  static const String host =
       'us-central1-covid19-codewithandrea-dev-api.cloudfunctions.net';
-  //static final int port = 443;
 
-  Uri tokenUri() => Uri(
+  static Uri tokenUri() => Uri(
         scheme: 'https',
         host: host,
-//        port: port,
         path: 'generateAccessToken',
       );
 
-  Uri endpointUri(Endpoint endpoint) => Uri(
+  static Uri endpointUri(Endpoint endpoint) => Uri(
         scheme: 'https',
         host: host,
-//        port: port,
         path: '${_paths[endpoint]}',
       );
 

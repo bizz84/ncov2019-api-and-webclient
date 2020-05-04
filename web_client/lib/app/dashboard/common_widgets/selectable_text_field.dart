@@ -14,7 +14,6 @@ class SelectableTextField extends StatelessWidget {
   Widget build(BuildContext context) {
     // TODO: Use TextField with obscure argument, disabled input, enabled copy
     return Container(
-      //width: double.infinity,
       decoration: BoxDecoration(
         border: Border.all(
           color: Colors.indigo,
@@ -29,7 +28,7 @@ class SelectableTextField extends StatelessWidget {
       child: SelectableText(
         textToShow,
         textAlign: TextAlign.start,
-        maxLines: 3,
+        //maxLines: 3,
         toolbarOptions: ToolbarOptions(
           copy: true,
           selectAll: true,

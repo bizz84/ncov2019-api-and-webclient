@@ -9,14 +9,6 @@ class DashboardLeftPanel extends StatelessWidget {
   final DashboardPageType selectedPageType;
   final ValueChanged<DashboardPageType> onPageSelected;
 
-  static const Map<Endpoint, String> endpointNames = {
-    Endpoint.cases: 'cases',
-    Endpoint.casesSuspected: 'casesSuspected',
-    Endpoint.casesConfirmed: 'casesConfirmed',
-    Endpoint.deaths: 'deaths',
-    Endpoint.recovered: 'recovered',
-  };
-
   @override
   Widget build(BuildContext context) {
     return ListView(
@@ -42,7 +34,7 @@ class DashboardLeftPanel extends StatelessWidget {
         for (var endpoint in Endpoint.values)
           DashboardListTile(
             iconData: Icons.show_chart,
-            title: endpointNames[endpoint],
+            title: endpoint.name,
             isSelected:
                 selectedPageType == DashboardPageType.endpoint(endpoint),
             onPressed: () => onPageSelected(

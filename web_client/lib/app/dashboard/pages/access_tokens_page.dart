@@ -5,7 +5,6 @@ import 'package:ncov2019_codewithandrea_web_client/app/models/environment.dart';
 import 'package:ncov2019_codewithandrea_web_client/app/models/user_authorization_keys_and_tokens.dart';
 import 'package:ncov2019_codewithandrea_web_client/common_widgets/show_exception_alert_dialog.dart';
 import 'package:ncov2019_codewithandrea_web_client/services/firestore_database.dart';
-import 'package:ncov2019_codewithandrea_web_client/services/rest_api/api.dart';
 import 'package:ncov2019_codewithandrea_web_client/services/rest_api/api_service.dart';
 import 'package:provider/provider.dart';
 
@@ -14,7 +13,7 @@ class AccessTokensPage extends StatelessWidget {
       BuildContext context, String authorizationKey) async {
     try {
       assert(authorizationKey != null);
-      final apiService = APIService(API(apiKey: authorizationKey));
+      final apiService = APIService(authorizationKey);
       final accessToken = await apiService.getAccessToken();
       print('access token: $accessToken');
     } catch (e) {
