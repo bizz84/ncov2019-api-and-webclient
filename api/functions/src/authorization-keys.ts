@@ -36,18 +36,19 @@ export async function generateAuthorizationKeys(userRecord: UserRecord, _: funct
     }
 }
 
-export async function regenerateAuthorizationKey(environment: any, context: functions.https.CallableContext) {
+export async function regenerateAuthorizationKey(data: any, context: functions.https.CallableContext) {
     const uid = context.auth?.uid
     try {
         if (uid === null || uid === undefined) {
             throw new functions.https.HttpsError('unauthenticated',
                 'The user is not authenticated.')
         }
-        if (environment !== 'sandbox' && environment !== 'production') {
+        const environment = getEnvironment(data)
+        if (environment === undefined || environment !== 'sandbox' && environment !== 'production') {
             // Throwing an HttpsError so that the client gets the error details.
             throw new functions.https.HttpsError('invalid-argument',
                 'The function must be called with ' +
-                'one argument "environment" (either sandbox or production)')
+                'one argument { "environment": $environment } (either sandbox or production)')
         }
         const firestore = admin.firestore()
         await firestore.runTransaction(async (transaction) => {
@@ -55,10 +56,10 @@ export async function regenerateAuthorizationKey(environment: any, context: func
             console.log(`Removing old ${environment} key for: 'users/${uid}'`)
             const userDocRef = firestore.collection('users').doc(uid)
             const userDocSnapshot = await transaction.get(userDocRef)
-            const data = userDocSnapshot.data()
-            if (data !== undefined) {
+            const userDocSnapshotData = userDocSnapshot.data()
+            if (userDocSnapshotData !== undefined) {
                 const key = `${environment}Key`
-                const authorizationKey = data[key]
+                const authorizationKey = userDocSnapshotData[key]
                 if (authorizationKey !== undefined) {
                     transaction.delete(firestore.collection('authorizationKeys').doc(authorizationKey))
                 }
@@ -80,4 +81,11 @@ export async function regenerateAuthorizationKey(environment: any, context: func
         console.log(`Error generating authorization keys for 'users/${uid}'`, error);
         throw error;
     }
+}
+
+function getEnvironment(data: any) {
+    if (typeof data !== 'object') {
+        return undefined
+    }
+    return data.environment
 }
