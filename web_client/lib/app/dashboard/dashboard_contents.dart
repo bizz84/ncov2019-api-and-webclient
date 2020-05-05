@@ -14,14 +14,6 @@ class DashboardContents extends StatefulWidget {
 class _DashboardContentsState extends State<DashboardContents> {
   DashboardPageType _selectedPage = DashboardPageType.authorizationKeys();
 
-  final _keys = {
-    Endpoint.cases: UniqueKey(),
-    Endpoint.casesSuspected: UniqueKey(),
-    Endpoint.casesConfirmed: UniqueKey(),
-    Endpoint.deaths: UniqueKey(),
-    Endpoint.recovered: UniqueKey(),
-  };
-
   void _selectPage(DashboardPageType page) {
     if (_selectedPage != page) {
       setState(() => _selectedPage = page);
@@ -50,7 +42,7 @@ class _DashboardContentsState extends State<DashboardContents> {
             authorizationKeys: () => AuthorizationKeysPage(),
             accessTokens: () => AccessTokensPage(),
             endpoint: (endpoint) =>
-                EndpointPage(endpoint, key: _keys[endpoint]),
+                EndpointPage(endpoint, key: Key('${endpoint.toString()}')),
           ),
         ),
       ],
