@@ -4,13 +4,12 @@ import { Request, Response } from 'express';
 export async function cases(req: Request, res: Response) {
     const validAccessToken = await readAndValidateAccessToken(req)
     if (!validAccessToken) {
-        res.sendStatus(401)
+        res.status(401).send(invalidTokenResponseData())
         return
     }
-    // TODO: access token checks
     const totalsData = await getTotals()
     if (totalsData === undefined) {
-        res.sendStatus(404)
+        res.status(404).send(unavailableDataResponseData('cases'))
         return
     }
     const value = totalsData?.data.confirmed
@@ -24,12 +23,12 @@ export async function cases(req: Request, res: Response) {
 export async function casesSuspected(req: Request, res: Response) {
     const validAccessToken = await readAndValidateAccessToken(req)
     if (!validAccessToken) {
-        res.sendStatus(401)
+        res.status(401).send(invalidTokenResponseData())
         return
     }
     const totalsData = await getTotals()
     if (totalsData === undefined) {
-        res.sendStatus(404)
+        res.status(404).send(unavailableDataResponseData('casesSuspected'))
         return
     }
     const date = totalsData?.dateString
@@ -42,12 +41,12 @@ export async function casesSuspected(req: Request, res: Response) {
 export async function casesConfirmed(req: Request, res: Response) {
     const validAccessToken = await readAndValidateAccessToken(req)
     if (!validAccessToken) {
-        res.sendStatus(401)
+        res.status(401).send(invalidTokenResponseData())
         return
     }
     const totalsData = await getTotals()
     if (totalsData === undefined) {
-        res.sendStatus(404)
+        res.status(404).send(unavailableDataResponseData('casesConfirmed'))
         return
     }
     const value = totalsData?.data.confirmed
@@ -61,12 +60,12 @@ export async function casesConfirmed(req: Request, res: Response) {
 export async function deaths(req: Request, res: Response) {
     const validAccessToken = await readAndValidateAccessToken(req)
     if (!validAccessToken) {
-        res.sendStatus(401)
+        res.status(401).send(invalidTokenResponseData())
         return
     }
     const totalsData = await getTotals()
     if (totalsData === undefined) {
-        res.sendStatus(404)
+        res.status(404).send(unavailableDataResponseData('deaths'))
         return
     }
     const value = totalsData?.data.deaths
@@ -80,12 +79,12 @@ export async function deaths(req: Request, res: Response) {
 export async function recovered(req: Request, res: Response) {
     const validAccessToken = await readAndValidateAccessToken(req)
     if (!validAccessToken) {
-        res.sendStatus(401)
+        res.status(401).send(invalidTokenResponseData())
         return
     }
     const totalsData = await getTotals()
     if (totalsData === undefined) {
-        res.sendStatus(404)
+        res.status(404).send(unavailableDataResponseData('recovered'))
         return
     }
     const value = totalsData?.data.recovered
@@ -148,4 +147,24 @@ async function isAccessTokenValid(accessToken: string) {
     const isValid = currentTimeMs <= accessTokenData.expirationTime
     console.log(`found 'accessTokens/${accessToken}' document, valid: ${isValid}`)
     return isValid
+}
+
+function invalidTokenResponseData() {
+    return {
+        error: {
+            code: 1001,
+            message: 'Invalid Credentials',
+            description: 'Access failure for API - Invalid Credentials. Make sure you have given the correct access token'
+        }
+    }
+}
+
+function unavailableDataResponseData(endpoint: string) {
+    return {
+        error: {
+            code: 1002,
+            message: 'Data not available',
+            description: `No data is available for the ${endpoint} endpoint`
+        }
+    }
 }

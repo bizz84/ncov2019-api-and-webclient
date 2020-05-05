@@ -7,7 +7,7 @@ class API {
   static Uri tokenUri() => Uri(
         scheme: 'https',
         host: host,
-        path: 'generateAccessToken',
+        path: 'token',
       );
 
   static Uri endpointUri(Endpoint endpoint) => Uri(

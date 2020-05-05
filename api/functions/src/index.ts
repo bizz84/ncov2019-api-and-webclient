@@ -26,8 +26,8 @@ exports.generateAuthorizationKeys = functions.auth.user().onCreate(generateAutho
 exports.regenerateAuthorizationKey = functions.https.onCall(regenerateAuthorizationKey)
 
 // Access tokens
-import { generateAccessToken } from './access-tokens'
-exports.generateAccessToken = functions.https.onRequest(generateAccessToken)
+import { token } from './access-tokens'
+exports.token = functions.https.onRequest(token)
 
 // Endpoints
 import { cases, casesSuspected, casesConfirmed, deaths, recovered } from './endpoints'

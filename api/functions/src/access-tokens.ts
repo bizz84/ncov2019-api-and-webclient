@@ -2,22 +2,24 @@ import * as admin from 'firebase-admin'
 import { Request, Response } from 'express';
 import { generateUuid } from './uuid-generator'
 
-export async function generateAccessToken(req: Request, res: Response) {
+/// Generates an access token
+export async function token(req: Request, res: Response) {
     try {
         if (req.method !== 'POST') {
-            console.log(`generateAccessToken should be called with the POST method`)
+            console.log(`token should be called with the POST method`)
             res.sendStatus(400)
             return
         }
         // TODO: grant_type=client_credentials?
         const authorizationKey = parseBasicAuthorizationKey(req.rawHeaders)
         if (authorizationKey === undefined) {
-            console.log(`generateAccessToken must be called with an {'Authorization': 'Basic <apiKey>'} header`)
+            console.log(`token must be called with an {'Authorization': 'Basic <apiKey>'} header`)
             res.sendStatus(400)
             return
         }
-        console.log(`generateAccessToken found ${authorizationKey} authorization key`)
+        console.log(`token found ${authorizationKey} authorization key`)
 
+        const currentTime = new Date().valueOf()
         const firestore = admin.firestore()
         const responseData = await firestore.runTransaction(async (transaction) => {
             // check if the authorization key exists
@@ -51,7 +53,6 @@ export async function generateAccessToken(req: Request, res: Response) {
                 return { statusCode: 200, accessTokenData: newAccessTokenData }
 
             } else {
-                const currentTime = new Date().valueOf()
                 if (currentTime > accessTokenData.expirationTime) {
                     // delete old token
                     const accessTokenDocRef = firestore.collection('accessTokens').doc(accessTokenData.accessToken)
@@ -66,10 +67,11 @@ export async function generateAccessToken(req: Request, res: Response) {
             }
         });
         if (responseData.statusCode === 200) {
+            const expiresInSeconds = (responseData.accessTokenData.expirationTime - currentTime) / 1000
             res.status(200).send({
                 access_token: responseData.accessTokenData.accessToken,
-                expiration_time: responseData.accessTokenData.expirationTime,
-                expiration_date: responseData.accessTokenData.expirationDate
+                token_type: 'Bearer',
+                expires_in: Math.round(expiresInSeconds),
             })
         } else {
             res.sendStatus(responseData.statusCode)
