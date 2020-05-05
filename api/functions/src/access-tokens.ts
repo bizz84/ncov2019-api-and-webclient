@@ -10,20 +10,9 @@ export async function generateAccessToken(req: Request, res: Response) {
             return
         }
         // TODO: grant_type=client_credentials?
-        const authHeader = req.headers.authorization
-        if (authHeader === undefined) {
-            console.log(`generateAccessToken must be called with an Authorization header`)
-            res.sendStatus(400)
-            return
-        }
-        if (authHeader.indexOf('Bearer ') !== 0) {
-            console.log(`generateAccessToken Authorization header should be of type Bearer`)
-            res.sendStatus(400)
-            return
-        }
-        const authorizationKey = authHeader.slice(7)
-        if (authorizationKey.length === 0) {
-            console.log(`generateAccessToken Authorization key is empty`)
+        const authorizationKey = parseBasicAuthorizationKey(req.rawHeaders)
+        if (authorizationKey === undefined) {
+            console.log(`generateAccessToken must be called with an {'Authorization': 'Basic <apiKey>'} header`)
             res.sendStatus(400)
             return
         }
@@ -43,7 +32,7 @@ export async function generateAccessToken(req: Request, res: Response) {
             const uid = authorizationKeyDocData.uid
             const environment = authorizationKeyDocData.environment
             if (uid === undefined || environment === undefined) {
-                console.log(`could not find 'uid', 'environment' for authorizationKey ${authorizationKey}`)
+                console.error(`could not find 'uid', 'environment' for authorizationKey ${authorizationKey}`)
                 return { statusCode: 500 }
             }
             const userDocRef = admin.firestore().collection('users').doc(uid)
@@ -119,4 +108,21 @@ function generateNewToken(transaction: admin.firestore.Transaction, environment:
         ...accessTokenData
     }, { merge: true })
     return accessTokenData
+}
+
+function parseBasicAuthorizationKey(rawHeaders: string[]) {
+    let didFindAuthorization = false
+    let authBasicHeader = ''
+    for (const header of rawHeaders) {
+        if (header === 'Authorization') {
+            didFindAuthorization = true
+        }
+        if (header.indexOf('Basic ') === 0) {
+            authBasicHeader = header
+        }
+    }
+    if (!didFindAuthorization || authBasicHeader.length === 0) {
+        return undefined
+    }
+    return authBasicHeader.slice(6)
 }

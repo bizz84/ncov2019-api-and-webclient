@@ -8,7 +8,7 @@ class APIService {
   Future<String> getAccessToken(String apiKey) async {
     final response = await http.post(
       API.tokenUri().toString(),
-      headers: {'Authorization': 'Bearer $apiKey'},
+      headers: {'Authorization': 'Basic $apiKey'},
     );
     if (response.statusCode == 200) {
       final data = json.decode(response.body);
