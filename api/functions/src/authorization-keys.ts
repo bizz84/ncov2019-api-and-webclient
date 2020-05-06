@@ -78,7 +78,7 @@ export async function regenerateAuthorizationKey(data: any, context: functions.h
             transaction.set(userDocRef, newData, { merge: true })
         });
     } catch (error) {
-        console.log(`Error generating authorization keys for 'users/${uid}'`, error);
+        console.warn(`Error generating authorization keys for 'users/${uid}'`, error);
         throw error;
     }
 }

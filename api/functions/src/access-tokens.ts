@@ -1,20 +1,28 @@
 import * as admin from 'firebase-admin'
 import { Request, Response } from 'express';
 import { generateUuid } from './uuid-generator'
+import {
+    accessTokenRequiresGetMethodErrorData,
+    accessTokenRequiresBasicAuthorizationErrorData,
+    authorizationKeyDoesNotExistErrorData,
+    missingUidEnvironmentAuthorizationKeyErrorData,
+    userNotFoundForAuthorizationKeyErrorData,
+    errorGeneratingAccessTokenErrorData
+} from './errors'
 
 /// Generates an access token
 export async function token(req: Request, res: Response) {
     try {
         if (req.method !== 'POST') {
             console.log(`token should be called with the POST method`)
-            res.sendStatus(400)
+            res.status(400).send(accessTokenRequiresGetMethodErrorData(req.method))
             return
         }
         // TODO: grant_type=client_credentials?
         const authorizationKey = parseBasicAuthorizationKey(req.rawHeaders)
         if (authorizationKey === undefined) {
             console.log(`token must be called with an {'Authorization': 'Basic <apiKey>'} header`)
-            res.sendStatus(400)
+            res.status(400).send(accessTokenRequiresBasicAuthorizationErrorData())
             return
         }
         console.log(`token found ${authorizationKey} authorization key`)
@@ -26,22 +34,19 @@ export async function token(req: Request, res: Response) {
             const authorizationKeyDocRef = firestore.collection('authorizationKeys').doc(authorizationKey)
             const authorizationKeyDocSnapshot = await transaction.get(authorizationKeyDocRef)
             if (!authorizationKeyDocSnapshot.exists) {
-                console.log(`authorizationKey ${authorizationKey} does not exist in the system`)
-                return { statusCode: 400 }
+                return { statusCode: 400, error: authorizationKeyDoesNotExistErrorData(authorizationKey) }
             }
             // find the corresponding user for that authorization key
             const authorizationKeyDocData = authorizationKeyDocSnapshot.data()!
             const uid = authorizationKeyDocData.uid
             const environment = authorizationKeyDocData.environment
             if (uid === undefined || environment === undefined) {
-                console.error(`could not find 'uid', 'environment' for authorizationKey ${authorizationKey}`)
-                return { statusCode: 500 }
+                return { statusCode: 500, error: missingUidEnvironmentAuthorizationKeyErrorData(authorizationKey) }
             }
             const userDocRef = admin.firestore().collection('users').doc(uid)
             const userDocSnapshot = await transaction.get(userDocRef)
             if (!userDocSnapshot.exists) {
-                console.log(`users/${uid} not found`)
-                return { statusCode: 400 }
+                return { statusCode: 400, error: userNotFoundForAuthorizationKeyErrorData(authorizationKey) }
             }
             // check if there is already an access token for that user
             const data = userDocSnapshot.data()!
@@ -74,12 +79,13 @@ export async function token(req: Request, res: Response) {
                 expires_in: Math.round(expiresInSeconds),
             })
         } else {
-            res.sendStatus(responseData.statusCode)
+            console.warn(responseData.error)
+            res.status(responseData.statusCode).send(responseData.error)
         }
 
     } catch (error) {
         console.log(`Error generating access token: `, error);
-        res.sendStatus(400)
+        res.status(500).send(errorGeneratingAccessTokenErrorData(error))
         throw error;
     }
 }

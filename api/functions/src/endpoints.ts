@@ -1,15 +1,16 @@
 import * as admin from 'firebase-admin'
 import { Request, Response } from 'express';
+import { invalidTokenErrorData, unavailableDataErrorData } from './errors'
 
 export async function cases(req: Request, res: Response) {
     const validAccessToken = await readAndValidateAccessToken(req)
     if (!validAccessToken) {
-        res.status(401).send(invalidTokenResponseData())
+        res.status(401).send(invalidTokenErrorData())
         return
     }
     const totalsData = await getTotals()
     if (totalsData === undefined) {
-        res.status(404).send(unavailableDataResponseData('cases'))
+        res.status(404).send(unavailableDataErrorData('cases'))
         return
     }
     const value = totalsData?.data.confirmed
@@ -23,12 +24,12 @@ export async function cases(req: Request, res: Response) {
 export async function casesSuspected(req: Request, res: Response) {
     const validAccessToken = await readAndValidateAccessToken(req)
     if (!validAccessToken) {
-        res.status(401).send(invalidTokenResponseData())
+        res.status(401).send(invalidTokenErrorData())
         return
     }
     const totalsData = await getTotals()
     if (totalsData === undefined) {
-        res.status(404).send(unavailableDataResponseData('casesSuspected'))
+        res.status(404).send(unavailableDataErrorData('casesSuspected'))
         return
     }
     const date = totalsData?.dateString
@@ -41,12 +42,12 @@ export async function casesSuspected(req: Request, res: Response) {
 export async function casesConfirmed(req: Request, res: Response) {
     const validAccessToken = await readAndValidateAccessToken(req)
     if (!validAccessToken) {
-        res.status(401).send(invalidTokenResponseData())
+        res.status(401).send(invalidTokenErrorData())
         return
     }
     const totalsData = await getTotals()
     if (totalsData === undefined) {
-        res.status(404).send(unavailableDataResponseData('casesConfirmed'))
+        res.status(404).send(unavailableDataErrorData('casesConfirmed'))
         return
     }
     const value = totalsData?.data.confirmed
@@ -60,12 +61,12 @@ export async function casesConfirmed(req: Request, res: Response) {
 export async function deaths(req: Request, res: Response) {
     const validAccessToken = await readAndValidateAccessToken(req)
     if (!validAccessToken) {
-        res.status(401).send(invalidTokenResponseData())
+        res.status(401).send(invalidTokenErrorData())
         return
     }
     const totalsData = await getTotals()
     if (totalsData === undefined) {
-        res.status(404).send(unavailableDataResponseData('deaths'))
+        res.status(404).send(unavailableDataErrorData('deaths'))
         return
     }
     const value = totalsData?.data.deaths
@@ -79,12 +80,12 @@ export async function deaths(req: Request, res: Response) {
 export async function recovered(req: Request, res: Response) {
     const validAccessToken = await readAndValidateAccessToken(req)
     if (!validAccessToken) {
-        res.status(401).send(invalidTokenResponseData())
+        res.status(401).send(invalidTokenErrorData())
         return
     }
     const totalsData = await getTotals()
     if (totalsData === undefined) {
-        res.status(404).send(unavailableDataResponseData('recovered'))
+        res.status(404).send(unavailableDataErrorData('recovered'))
         return
     }
     const value = totalsData?.data.recovered
@@ -114,7 +115,7 @@ async function readAndValidateAccessToken(req: Request) {
 
 async function getAccessToken(req: Request) {
     if (req.method !== 'GET') {
-        console.log(`checkAccessToken should be called with the GET method`)
+        console.log(`function should be called with the GET method`)
         return undefined
     }
     // TODO: grant_type=client_credentials?
@@ -147,24 +148,4 @@ async function isAccessTokenValid(accessToken: string) {
     const isValid = currentTimeMs <= accessTokenData.expirationTime
     console.log(`found 'accessTokens/${accessToken}' document, valid: ${isValid}`)
     return isValid
-}
-
-function invalidTokenResponseData() {
-    return {
-        error: {
-            code: 1001,
-            message: 'Invalid Credentials',
-            description: 'Access failure for API - Invalid Credentials. Make sure you have given the correct access token'
-        }
-    }
-}
-
-function unavailableDataResponseData(endpoint: string) {
-    return {
-        error: {
-            code: 1002,
-            message: 'Data not available',
-            description: `No data is available for the ${endpoint} endpoint`
-        }
-    }
 }
