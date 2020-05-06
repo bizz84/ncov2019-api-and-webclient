@@ -1,6 +1,7 @@
 {
   "projects": {
     "default": "covid19-codewithandrea-dev-api",
-    "dev": "covid19-codewithandrea-dev-api"
+    "dev": "covid19-codewithandrea-dev-api",
+    "prod": "ncov2019-codewithandrea-api"
   }
 }

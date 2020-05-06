@@ -12,6 +12,7 @@
   },
   "hosting": {
     "public": "public",
+    "site": "ncov2019-admin",
     "ignore": [
       "firebase.json",
       "**/.*",
