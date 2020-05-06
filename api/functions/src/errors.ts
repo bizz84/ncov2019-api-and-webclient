@@ -13,7 +13,7 @@ export function accessTokenRequiresBasicAuthorizationErrorData() {
     return {
         error: {
             code: 1002,
-            message: 'Missing or invalid Authorization header',
+            message: 'Missing or invalid authorization header',
             description: `token must be called with an {'Authorization': 'Basic <apiKey>'} header`
         }
     }
