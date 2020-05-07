@@ -17,6 +17,32 @@
       "firebase.json",
       "**/.*",
       "**/node_modules/**"
+    ],
+    "rewrites": [
+      {
+        "source": "/token",
+        "function": "token"
+      },
+      {
+        "source": "/cases",
+        "function": "cases"
+      },
+      {
+        "source": "/casesSuspected",
+        "function": "casesSuspected"
+      },
+      {
+        "source": "/casesConfirmed",
+        "function": "casesConfirmed"
+      },
+      {
+        "source": "/deaths",
+        "function": "deaths"
+      },
+      {
+        "source": "/recovered",
+        "function": "recovered"
+      }
     ]
   },
   "emulators": {
