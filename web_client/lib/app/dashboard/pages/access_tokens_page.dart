@@ -51,6 +51,7 @@ class AccessTokensPage extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 KeyOrTokenPreview(
+                  key: Key('access-token-sandbox'),
                   environment: Environment.sandbox,
                   value: sandboxAccessToken?.accessToken ?? '',
                   title: accessTokenTitle(sandboxAccessToken?.expirationDate),
@@ -63,6 +64,7 @@ class AccessTokensPage extends StatelessWidget {
                 ),
                 SizedBox(height: 32),
                 KeyOrTokenPreview(
+                  key: Key('access-token-production'),
                   environment: Environment.production,
                   value: productionAccessToken?.accessToken ?? '',
                   title:

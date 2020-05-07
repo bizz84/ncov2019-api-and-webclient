@@ -64,6 +64,7 @@ class _EndpointPageState extends State<EndpointPage> {
           SizedBox(height: 24),
           CurlCommandWithAccessToken(
             environment: _environment,
+            endpoint: widget.endpoint,
             curlCommandBuilder: (accessToken) =>
                 "curl -X GET --header 'Authorization: Bearer $accessToken' '$url'",
             onSend: (accessToken) =>
@@ -123,11 +124,16 @@ class EnvironmentSegmentedControlText extends StatelessWidget {
 
 class CurlCommandWithAccessToken extends StatelessWidget {
   const CurlCommandWithAccessToken(
-      {Key key, this.curlCommandBuilder, this.environment, this.onSend})
+      {Key key,
+      @required this.curlCommandBuilder,
+      @required this.environment,
+      @required this.endpoint,
+      @required this.onSend})
       : super(key: key);
   final String Function(String accessToken) curlCommandBuilder;
-  final ValueChanged<String> onSend;
   final Environment environment;
+  final Endpoint endpoint;
+  final Future<void> Function(String) onSend;
 
   @override
   Widget build(BuildContext context) {
@@ -140,14 +146,47 @@ class CurlCommandWithAccessToken extends StatelessWidget {
               ? keysAndTokens?.sandboxAccessToken
               : keysAndTokens?.productionAccessToken;
           final accessToken = sandboxAccessToken?.accessToken ?? '';
-          return SelectableTextFieldWithActions(
-            title: 'curl command',
-            value: curlCommandBuilder(accessToken),
-            customActionBuilder: (context) => PrimaryButton(
-              text: 'Send',
-              onPressed: () => onSend(accessToken),
-            ),
+          return CurlCommandWithAccessTokenContents(
+            key: Key('$endpoint-curl-command'),
+            accessToken: accessToken,
+            curlCommandBuilder: curlCommandBuilder,
+            onSend: onSend,
           );
         });
+  }
+}
+
+class CurlCommandWithAccessTokenContents extends HookWidget {
+  const CurlCommandWithAccessTokenContents(
+      {Key key,
+      @required this.accessToken,
+      @required this.curlCommandBuilder,
+      @required this.onSend})
+      : super(key: key);
+  final String accessToken;
+  final String Function(String accessToken) curlCommandBuilder;
+  final Future<void> Function(String) onSend;
+
+  Future<void> _send(ValueNotifier<bool> loading) async {
+    try {
+      loading.value = true;
+      await onSend(accessToken);
+    } finally {
+      loading.value = false;
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final loading = useState(false);
+    return SelectableTextFieldWithActions(
+      title: 'curl command',
+      value: curlCommandBuilder(accessToken),
+      customActionBuilder: (context) => PrimaryButton(
+        loading: loading.value,
+        text: 'Send',
+        onPressed: () => _send(loading),
+      ),
+    );
   }
 }

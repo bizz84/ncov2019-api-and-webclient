@@ -44,6 +44,7 @@ class AuthorizationKeysPage extends HookWidget {
               ),
               SizedBox(height: 16),
               KeyOrTokenPreview(
+                key: Key('authorization-key-sandbox'),
                 environment: Environment.sandbox,
                 isTextVisible: keysVisible.value,
                 value: sandboxKey,
@@ -54,6 +55,7 @@ class AuthorizationKeysPage extends HookWidget {
               ),
               SizedBox(height: 32),
               KeyOrTokenPreview(
+                key: Key('authorization-key-production'),
                 environment: Environment.production,
                 isTextVisible: keysVisible.value,
                 value: productionKey,
