@@ -16,9 +16,6 @@ class AccessTokensPage extends StatelessWidget {
       final accessToken = await APIService().getAccessToken(authorizationKey);
       print('access token: $accessToken');
     } catch (e) {
-      // Fails due to https://stackoverflow.com/questions/56139505/how-to-make-http-request-to-in-flutter-web/59552060#59552060
-      // https://cloud.google.com/functions/docs/writing/http#handling_cors_requests
-      // https://firebase.google.com/docs/hosting/functions
       showExceptionAlertDialog(
         context: context,
         title: 'Could not generate the access token',
