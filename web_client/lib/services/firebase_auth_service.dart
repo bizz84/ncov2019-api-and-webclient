@@ -49,17 +49,18 @@ class FirebaseAuthService {
     if (googleUser != null) {
       final GoogleSignInAuthentication googleAuth =
           await googleUser.authentication;
-      if (googleAuth.accessToken != null && googleAuth.idToken != null) {
+      if (googleAuth.idToken != null) {
         final AuthResult authResult = await _firebaseAuth
             .signInWithCredential(GoogleAuthProvider.getCredential(
           idToken: googleAuth.idToken,
+          // Note: Access token is null when running on web, so we don't check for it above
           accessToken: googleAuth.accessToken,
         ));
         return _userFromFirebase(authResult.user);
       } else {
         throw PlatformException(
-            code: 'ERROR_MISSING_GOOGLE_AUTH_TOKEN',
-            message: 'Missing Google Auth Token');
+            code: 'ERROR_MISSING_GOOGLE_ID_TOKEN',
+            message: 'Missing Google ID Token');
       }
     } else {
       throw PlatformException(
