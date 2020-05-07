@@ -11,7 +11,7 @@ class SignInButton extends CustomRaisedButton {
     double height = 50.0,
   }) : super(
           key: key,
-          child: Text(text, style: TextStyle(color: textColor, fontSize: 16.0)),
+          child: Text(text, style: TextStyle(color: textColor, fontSize: 22.0)),
           color: color,
           textColor: textColor,
           height: height,
