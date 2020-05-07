@@ -1,8 +1,10 @@
 import 'dart:math';
 
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:ncov2019_codewithandrea_web_client/app/sign_in/email_password/email_password_sign_in_page.dart';
 import 'package:ncov2019_codewithandrea_web_client/app/sign_in/sign_in_view_model.dart';
 import 'package:ncov2019_codewithandrea_web_client/app/sign_in/sign_in_button.dart';
+import 'package:ncov2019_codewithandrea_web_client/app/sign_in/social_sign_in_button.dart';
 import 'package:ncov2019_codewithandrea_web_client/common_widgets/show_exception_alert_dialog.dart';
 import 'package:ncov2019_codewithandrea_web_client/constants/keys.dart';
 import 'package:ncov2019_codewithandrea_web_client/constants/strings.dart';
@@ -28,7 +30,7 @@ class SignInPageBuilder extends StatelessWidget {
   }
 }
 
-class SignInPage extends StatelessWidget {
+class SignInPage extends HookWidget {
   const SignInPage._({Key key, this.viewModel, this.title}) : super(key: key);
   final SignInViewModel viewModel;
   final String title;
@@ -42,6 +44,20 @@ class SignInPage extends StatelessWidget {
       title: Strings.signInFailed,
       exception: exception,
     );
+  }
+
+  Future<void> _signInWithGoogle(
+      BuildContext context, ValueNotifier<bool> isLoading) async {
+    try {
+      isLoading.value = true;
+      await viewModel.signInWithGoogle();
+    } catch (e) {
+      if (e.code != 'ERROR_ABORTED_BY_USER') {
+        _showSignInError(context, e);
+      }
+    } finally {
+      isLoading.value = false;
+    }
   }
 
   Future<void> _signInAnonymously(BuildContext context) async {
@@ -78,6 +94,7 @@ class SignInPage extends StatelessWidget {
   }
 
   Widget _buildSignIn(BuildContext context) {
+    final isLoading = useState(false);
     return Center(
       child: LayoutBuilder(builder: (context, constraints) {
         return Container(
@@ -87,12 +104,27 @@ class SignInPage extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: <Widget>[
-              // SizedBox(height: 32.0),
-              // SizedBox(
-              //   height: 50.0,
-              //   child: _buildHeader(),
-              // ),
-              // SizedBox(height: 32.0),
+              SizedBox(height: 32.0),
+              SizedBox(
+                height: 50.0,
+                child: _buildHeader(),
+              ),
+              SizedBox(height: 32.0),
+              SocialSignInButton(
+                assetName: 'assets/go-logo.png',
+                text: Strings.signInWithGoogle,
+                onPressed: isLoading.value
+                    ? null
+                    : () => _signInWithGoogle(context, isLoading),
+                color: Colors.white,
+              ),
+              SizedBox(height: 8),
+              Text(
+                Strings.or,
+                style: TextStyle(fontSize: 14.0, color: Colors.black87),
+                textAlign: TextAlign.center,
+              ),
+              SizedBox(height: 8),
               SignInButton(
                 key: emailPasswordButtonKey,
                 text: Strings.signInWithEmailPassword,
@@ -102,12 +134,6 @@ class SignInPage extends StatelessWidget {
                 textColor: Colors.white,
                 color: Theme.of(context).primaryColor,
               ),
-              // SizedBox(height: 8),
-              // Text(
-              //   Strings.or,
-              //   style: TextStyle(fontSize: 14.0, color: Colors.black87),
-              //   textAlign: TextAlign.center,
-              // ),
               // SizedBox(height: 8),
               // SignInButton(
               //   key: anonymousButtonKey,

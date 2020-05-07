@@ -11,6 +11,7 @@ class Strings {
 
   // Sign In Page
   static const String signIn = 'Sign in';
+  static const String signInWithGoogle = 'Sign in with Google';
   static const String signInWithEmailPassword =
       'Sign in with email and password';
   static const String goAnonymous = 'Go anonymous';
