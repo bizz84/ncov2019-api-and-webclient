@@ -23,7 +23,7 @@ class SignInPageBuilder extends StatelessWidget {
       child: Consumer<SignInViewModel>(
         builder: (_, SignInViewModel viewModel, __) => SignInPage._(
           viewModel: viewModel,
-          title: 'nCoV 2019 Developer Dashboard',
+          title: 'nCoV 2019 Admin Dashboard',
         ),
       ),
     );
