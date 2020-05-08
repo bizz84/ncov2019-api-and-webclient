@@ -31,16 +31,29 @@
     }
   </script>
   <!-- The core Firebase JS SDK is always required and must be listed first -->
-  <script src="/__firebase/7.14.2/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/7.14.2/firebase-app.js"></script>
 
   <!-- TODO: Add SDKs for Firebase products that you want to use
       https://firebase.google.com/docs/web/setup#available-libraries -->
-  <script src="/__firebase/7.14.2/firebase-auth.js"></script>
-  <script src="/__firebase/7.14.2/firebase-firestore.js"></script>
-  <script src="/__firebase/7.14.2/firebase-functions.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/7.14.2/firebase-auth.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/7.14.2/firebase-firestore.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/7.14.2/firebase-functions.js"></script>
     
   <!-- Initialize Firebase -->
-  <script src="/__/firebase/init.js"></script>
+  <script>
+    // Your web app's Firebase configuration
+    var firebaseConfig = {
+      apiKey: "AIzaSyCBiv_hjjs309Zb7-jlFBX6Jm_jPTGh16M",
+      authDomain: "ncov2019-codewithandrea-api.firebaseapp.com",
+      databaseURL: "https://ncov2019-codewithandrea-api.firebaseio.com",
+      projectId: "ncov2019-codewithandrea-api",
+      storageBucket: "ncov2019-codewithandrea-api.appspot.com",
+      messagingSenderId: "642901234119",
+      appId: "1:642901234119:web:2f3be4da0b15d4414ac9e2"
+    };
+    // Initialize Firebase
+    firebase.initializeApp(firebaseConfig);
+  </script>
   <script src="main.dart.js" type="application/javascript"></script>
 </body>
 </html>
