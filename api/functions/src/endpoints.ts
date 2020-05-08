@@ -14,7 +14,7 @@ export async function cases(req: Request, res: Response) {
         return
     }
     const value = totalsData?.data.confirmed
-    const date = totalsData?.dateString
+    const date = totalsData?.date
     res.send([{
         cases: value,
         date: date
@@ -32,7 +32,7 @@ export async function casesSuspected(req: Request, res: Response) {
         res.status(404).send(unavailableDataErrorData('casesSuspected'))
         return
     }
-    const date = totalsData?.dateString
+    const date = totalsData?.date
     res.send([{
         data: 0,
         date: date
@@ -51,7 +51,7 @@ export async function casesConfirmed(req: Request, res: Response) {
         return
     }
     const value = totalsData?.data.confirmed
-    const date = totalsData?.dateString
+    const date = totalsData?.date
     res.send([{
         data: value,
         date: date
@@ -70,7 +70,7 @@ export async function deaths(req: Request, res: Response) {
         return
     }
     const value = totalsData?.data.deaths
-    const date = totalsData?.dateString
+    const date = totalsData?.date
     res.send([{
         data: value,
         date: date
@@ -89,7 +89,7 @@ export async function recovered(req: Request, res: Response) {
         return
     }
     const value = totalsData?.data.recovered
-    const date = totalsData?.dateString
+    const date = totalsData?.date
     res.send([{
         data: value,
         date: date
