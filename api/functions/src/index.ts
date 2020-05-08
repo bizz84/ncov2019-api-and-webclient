@@ -6,12 +6,12 @@ import * as functions from 'firebase-functions'
 admin.initializeApp();
 
 // Internal API (for updating the data)
-import { saveLatestTotalsToFirestore/*, runSaveLatestTotalsToFirestore*/ } from './save-to-database'
+import { /*saveLatestTotalsToFirestore, */runSaveLatestTotalsToFirestore } from './save-to-database'
 
-exports.saveLatestTotalsToFirestore = functions.https.onRequest((_, res) => saveLatestTotalsToFirestore(res))
+//exports.saveLatestTotalsToFirestore = functions.https.onRequest((_, res) => saveLatestTotalsToFirestore(res))
 
-//exports.scheduleFirestoreUpdate =
-//    functions.pubsub.schedule('0 2,14 * * *').onRun((_) => runSaveLatestTotalsToFirestore())
+exports.scheduleFirestoreUpdate =
+    functions.pubsub.schedule('0 2,14 * * *').onRun((_) => runSaveLatestTotalsToFirestore())
 
 //////////////////////////
 // Public API
