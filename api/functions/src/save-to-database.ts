@@ -40,44 +40,6 @@ async function getDataFromAPI(dataSource: DataSource): Promise<{ data: { confirm
     }
 }
 
-async function getDataFromCovid2019Api(): Promise<{ data: { confirmed: number, deaths: number, recovered: number, active: number }, date: string } | undefined> {
-    const endpointUrl = 'https://covid2019-api.herokuapp.com/v2/total'
-
-    const resp = await superagent.get(endpointUrl)
-    const data = resp.body.data
-    if (data === undefined) {
-        return undefined
-    }
-
-    const confirmed = resp.body.data.confirmed
-    const deaths = resp.body.data.deaths
-    const recovered = resp.body.data.recovered
-    const active = resp.body.data.active
-    // TODO: Parse to iso string
-    const date = getDate(resp.body.ts).toISOString()
-    return {
-        data: {
-            confirmed: confirmed,
-            active: active,
-            deaths: deaths,
-            recovered: recovered
-        },
-        date: date
-    }
-    /* sample data from API:
-    {
-        data: {
-            confirmed: 3193886,
-            deaths: 227638,
-            recovered: 972719,
-            active: 1993529
-        },
-        dt: '04-29-2020',
-        ts: 1588118400
-    }
-    */
-}
-
 async function getDataFromCovid19MathdroApi(): Promise<{ data: { confirmed: number, deaths: number, recovered: number, active: number }, date: string } | undefined> {
     const endpointUrl = 'https://covid19.mathdro.id/api'
 
@@ -127,6 +89,44 @@ async function getDataFromCovid19MathdroApi(): Promise<{ data: { confirmed: numb
         "example": "https://covid19.mathdro.id/api/countries/USA"
       },
       "lastUpdate": "2020-05-06T10:32:27.000Z"
+    }
+    */
+}
+
+async function getDataFromCovid2019Api(): Promise<{ data: { confirmed: number, deaths: number, recovered: number, active: number }, date: string } | undefined> {
+    const endpointUrl = 'https://covid2019-api.herokuapp.com/v2/total'
+
+    const resp = await superagent.get(endpointUrl)
+    const data = resp.body.data
+    if (data === undefined) {
+        return undefined
+    }
+
+    const confirmed = resp.body.data.confirmed
+    const deaths = resp.body.data.deaths
+    const recovered = resp.body.data.recovered
+    const active = resp.body.data.active
+    // TODO: Parse to iso string
+    const date = getDate(resp.body.ts).toISOString()
+    return {
+        data: {
+            confirmed: confirmed,
+            active: active,
+            deaths: deaths,
+            recovered: recovered
+        },
+        date: date
+    }
+    /* sample data from API:
+    {
+        data: {
+            confirmed: 3193886,
+            deaths: 227638,
+            recovered: 972719,
+            active: 1993529
+        },
+        dt: '04-29-2020',
+        ts: 1588118400
     }
     */
 }
