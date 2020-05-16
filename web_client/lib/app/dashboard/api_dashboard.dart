@@ -1,8 +1,7 @@
+import 'package:alert_dialogs/alert_dialogs.dart';
 import 'package:firebase_auth_service/firebase_auth_service.dart';
 import 'package:flutter/material.dart';
 import 'package:ncov2019_codewithandrea_web_client/app/dashboard/dashboard_contents.dart';
-import 'package:ncov2019_codewithandrea_web_client/common_widgets/show_alert_dialog.dart';
-import 'package:ncov2019_codewithandrea_web_client/common_widgets/show_exception_alert_dialog.dart';
 import 'package:ncov2019_codewithandrea_web_client/constants/keys.dart';
 import 'package:ncov2019_codewithandrea_web_client/constants/strings.dart';
 import 'package:provider/provider.dart';

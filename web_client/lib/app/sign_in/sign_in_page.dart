@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:alert_dialogs/alert_dialogs.dart';
 import 'package:email_password_sign_in_ui/email_password_sign_in_ui.dart';
 import 'package:firebase_auth_service/firebase_auth_service.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
@@ -7,7 +8,6 @@ import 'package:google_sign_in_service/google_sign_in_service.dart';
 import 'package:ncov2019_codewithandrea_web_client/app/sign_in/sign_in_view_model.dart';
 import 'package:ncov2019_codewithandrea_web_client/app/sign_in/sign_in_button.dart';
 import 'package:ncov2019_codewithandrea_web_client/app/sign_in/social_sign_in_button.dart';
-import 'package:ncov2019_codewithandrea_web_client/common_widgets/show_exception_alert_dialog.dart';
 import 'package:ncov2019_codewithandrea_web_client/constants/keys.dart';
 import 'package:ncov2019_codewithandrea_web_client/constants/strings.dart';
 import 'package:flutter/foundation.dart';
