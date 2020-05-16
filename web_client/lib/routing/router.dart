@@ -1,25 +1,17 @@
+import 'package:email_password_sign_in_ui/email_password_sign_in_ui.dart';
 import 'package:flutter/material.dart';
-import 'package:ncov2019_codewithandrea_web_client/app/auth_widget.dart';
-import 'package:ncov2019_codewithandrea_web_client/app/sign_in/email_password/email_password_sign_in_page.dart';
 
 class Routes {
-  static const authWidget = '/';
-  static const emailPasswordSignInPageBuilder =
-      '/email-password-sign-in-page-builder';
+  static const emailPasswordSignInPage = '/email-password-sign-in-page';
 }
 
 class Router {
   static Route<dynamic> onGenerateRoute(RouteSettings settings) {
     final args = settings.arguments;
     switch (settings.name) {
-      case Routes.authWidget:
+      case Routes.emailPasswordSignInPage:
         return MaterialPageRoute<dynamic>(
-          builder: (_) => AuthWidget(userSnapshot: args),
-          settings: settings,
-        );
-      case Routes.emailPasswordSignInPageBuilder:
-        return MaterialPageRoute<dynamic>(
-          builder: (_) => EmailPasswordSignInPageBuilder(onSignedIn: args),
+          builder: (_) => EmailPasswordSignInPage(onSignedIn: args),
           settings: settings,
           fullscreenDialog: true,
         );
