@@ -1,9 +1,9 @@
+import 'package:alert_dialogs/alert_dialogs.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:ncov2019_codewithandrea_web_client/app/dashboard/common_widgets/key_or_token_preview.dart';
 import 'package:ncov2019_codewithandrea_web_client/app/models/environment.dart';
 import 'package:ncov2019_codewithandrea_web_client/app/models/user_authorization_keys_and_tokens.dart';
-import 'package:ncov2019_codewithandrea_web_client/common_widgets/show_exception_alert_dialog.dart';
 import 'package:ncov2019_codewithandrea_web_client/services/cloud_functions_service.dart';
 import 'package:ncov2019_codewithandrea_web_client/services/firestore_database.dart';
 import 'package:provider/provider.dart';

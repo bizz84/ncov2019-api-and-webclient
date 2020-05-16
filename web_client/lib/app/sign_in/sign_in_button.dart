@@ -1,4 +1,4 @@
-import 'package:ncov2019_codewithandrea_web_client/common_widgets/custom_raised_button.dart';
+import 'package:custom_buttons/custom_buttons.dart';
 import 'package:flutter/material.dart';
 
 class SignInButton extends CustomRaisedButton {

@@ -1,6 +1,6 @@
+import 'package:custom_buttons/custom_buttons.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:ncov2019_codewithandrea_web_client/common_widgets/custom_raised_button.dart';
 
 class SocialSignInButton extends CustomRaisedButton {
   SocialSignInButton({
