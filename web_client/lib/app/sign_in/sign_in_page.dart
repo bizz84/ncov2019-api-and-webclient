@@ -1,7 +1,6 @@
 import 'dart:math';
 
 import 'package:alert_dialogs/alert_dialogs.dart';
-import 'package:email_password_sign_in_ui/email_password_sign_in_ui.dart';
 import 'package:firebase_auth_service/firebase_auth_service.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:google_sign_in_service/google_sign_in_service.dart';
@@ -14,16 +13,6 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:ncov2019_codewithandrea_web_client/routing/router.dart';
 import 'package:provider/provider.dart';
-
-extension EmailPasswordSignInPageX on EmailPasswordSignInPage {
-  static Future<void> show(BuildContext context) async {
-    final navigator = Navigator.of(context);
-    await navigator.pushNamed(
-      Routes.emailPasswordSignInPage,
-      arguments: () => navigator.pop(),
-    );
-  }
-}
 
 class SignInPageBuilder extends StatelessWidget {
   @override
@@ -73,6 +62,14 @@ class SignInPage extends HookWidget {
     } finally {
       isLoading.value = false;
     }
+  }
+
+  Future<void> _showEmailPasswordSignInPage(BuildContext context) async {
+    final navigator = Navigator.of(context);
+    await navigator.pushNamed(
+      Routes.emailPasswordSignInPage,
+      arguments: () => navigator.pop(),
+    );
   }
 
   // Future<void> _signInAnonymously(BuildContext context) async {
@@ -145,7 +142,7 @@ class SignInPage extends HookWidget {
                 text: Strings.signInWithEmailPassword,
                 onPressed: viewModel.isLoading
                     ? null
-                    : () => EmailPasswordSignInPageX.show(context),
+                    : () => _showEmailPasswordSignInPage(context),
                 textColor: Colors.white,
                 color: Theme.of(context).primaryColor,
               ),
