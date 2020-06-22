@@ -72,14 +72,6 @@ class SignInPage extends HookWidget {
     );
   }
 
-  // Future<void> _signInAnonymously(BuildContext context) async {
-  //   try {
-  //     await viewModel.signInAnonymously();
-  //   } catch (e) {
-  //     _showSignInError(context, e);
-  //   }
-  // }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
