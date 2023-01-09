@@ -16,8 +16,8 @@
   "dependencies": {
     "@types/superagent": "^4.1.7",
     "express": "^4.17.1",
-    "firebase-admin": "^8.6.0",
-    "firebase-functions": "^3.3.0",
+    "firebase-admin": "^11.4.1",
+    "firebase-functions": "^3.24.1",
     "superagent": "^5.2.2"
   },
   "devDependencies": {
